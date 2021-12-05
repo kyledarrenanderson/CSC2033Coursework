@@ -4,23 +4,28 @@
 <head>
     <meta charset="'utf-8">
     <title>FDM Gamified Web Application</title>
-    <link rel="stylesheet" href="../websiteResources/base.css" />
+    <link rel="stylesheet" href="../static/websiteResources/base.css" />
 </head>
 
 <body>
 
     <div class="navbar">
-            <a href="index.html" class="navbarItem">Home</a>
-            <a href="account.html" class="navbarItem">Account</a>
-            <a href="learningResources.html" class="navbarItem">Learning Resources</a>
-            <a href="admin.html" class="navbarItem">Admin</a>
-            <a href="" style="float: right" class="navbarItem">Logout</a>
-        </ul>
+        <div class = "navbarItem">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('account') }}">Account</a>
+            <a href="{{ url_for('learningResources') }}">Learning Resources</a>
+            <a href="{{ url_for('admin') }}">Admin</a>
+            <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="" style="float: right; border-left: 1px solid #000000; border-right: 0;">Logout</a>
+        </div>
     </div>
-
+    {% block content %}
+    {% endblock %}
     <section class="bottomBar">
         <div class = fdmInfo>
-            <a href="aboutUs.html">About Us</a>
+            <a href="{{ url_for('aboutUs') }}">About Us</a>
             <li>Placeholder for phone number</li>
             <li>Placeholder for email</li>
         </div>

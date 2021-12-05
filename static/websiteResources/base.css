@@ -10,7 +10,7 @@
     width: 100%;
 }
 
-.navbarItem {
+.navbarItem a{
     float: left;
     display: block;
     color: white;
@@ -20,8 +20,9 @@
     border-right: 1px solid #000000
 }
 
-.navbarItem:hover {
+.navbarItem a:hover {
     color: #00afaf;
+    background-color: #000000;
 }
 
 .bottomBar{
