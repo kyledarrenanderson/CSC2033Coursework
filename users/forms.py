@@ -1,4 +1,4 @@
-from wtforms import StringField, SubmitField, DateField
+from wtforms import StringField, SubmitField, DateField, SelectField, PasswordField
 from flask_wtf import FlaskForm
 from wtforms.validators import data_required, Email, Length, EqualTo, ValidationError
 import re
@@ -19,6 +19,9 @@ class RegisterForm(FlaskForm):
     dob = DateField('DatePicker', format='%y-%m-%d',validators=[data_required()])
     password = StringField(validators=[data_required(), Length(min=8, message='password must be 8 characters or more')])
     confirmPassword = StringField(validators=[data_required(), EqualTo('password', message='Passwords do not match')])
+    educationLevel = SelectField(label='Education Level', choices=('None', 'GCSE', 'A Level', 'Bachelors', 'Masters'),
+                                 validators=[data_required()])
+    studiedCompSci = SelectField(label='Studied Computer Science', choices=('No', 'Yes'), validators=[data_required()])
     submit = SubmitField()
 
     def validate_password(self, password):
@@ -32,3 +35,9 @@ class RegisterForm(FlaskForm):
         n = re.compile(r'((\d){4}(-)(\d){3}(-)(\d){4})')
         if not n.match(self.phone.data):
             raise ValidationError("Phone numbers must be entered in the format XXXX-XXX-XXXX")
+
+
+class LoginForm(FlaskForm):
+    email = StringField()
+    password= PasswordField()
+    submit = SubmitField()

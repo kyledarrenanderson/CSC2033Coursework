@@ -21,6 +21,10 @@
             {% for error in form.confirmPassword.errors %}
                 {{ error }}
             {% endfor %}
+            <p>Highest Education Level</p>
+            {{ form.educationLevel(class="inputs", placeholder="Education Level") }}
+            <p>Have you Previously Studied Computer Science</p>
+            {{ form.studiedCompSci(class="inputs", placeholder="Have you Previously Studied Computer Science") }}
             {{ form.submit(class="submitButton") }}
         </form>
     </div>
