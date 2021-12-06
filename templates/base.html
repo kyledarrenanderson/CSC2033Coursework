@@ -12,28 +12,32 @@
     <div class="navbar">
         <div class = "navbarItem">
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('account') }}">Account</a>
+            <a href="{{ url_for('users.account') }}">Account</a>
             <a href="{{ url_for('learningResources') }}">Learning Resources</a>
-            <a href="{{ url_for('admin') }}">Admin</a>
+            <a href="{{ url_for('admin.admin') }}">Admin</a>
             <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('users.login') }}">Login</a>
+            <a href="{{ url_for('users.register') }}">Register</a>
             <a href="" style="float: right; border-left: 1px solid #000000; border-right: 0;">Logout</a>
         </div>
     </div>
+
     {% block content %}
     {% endblock %}
-    <section class="bottomBar">
+
+    <container class="bottomBar">
+
         <div class = fdmInfo>
             <a href="{{ url_for('aboutUs') }}">About Us</a>
             <li>Placeholder for phone number</li>
             <li>Placeholder for email</li>
         </div>
+
         <div class = fdmSocials>
             <a href="https://www.linkedin.com/company/fdm-group" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="https://www.facebook.com/FDMGroup/" target="_blank" rel="noopener noreferrer">Facebook</a>
             <a href="https://twitter.com/FDMGroup" target="_blank" rel="noopener noreferrer">Twitter</a>
             <a href="https://www.youtube.com/user/FDMGroupVideos" target="_blank" rel="noopener noreferrer">Youtube</a>
         </div>
-    </section>
+    </container>
 </body>

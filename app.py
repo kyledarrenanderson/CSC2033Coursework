@@ -1,21 +1,14 @@
 from flask import Flask, render_template
 
+
+# CONFIG
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'toBeChangedLater'
 
 
 @app.route('/')
 def index():  # put application's code here
     return render_template('index.html')
-
-
-@app.route('/account')
-def account():  # put application's code here
-    return render_template('account.html')
-
-
-@app.route('/admin')
-def admin():  # put application's code here
-    return render_template('admin.html')
 
 
 @app.route('/learningResources')
@@ -33,15 +26,38 @@ def aboutUs():  # put application's code here
     return render_template('aboutUs.html')
 
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+# ERROR PAGES
+@app.errorhandler(400)
+def bad_request(error):
+    return render_template('400.html'), 400
 
 
-@app.route('/register')
-def register():
-    return render_template('register.html')
+@app.errorhandler(403)
+def page_forbidden(error):
+    return render_template('403.html'), 403
 
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(503)
+def service_unavailable(error):
+    return render_template('503.html'), 503
+
+
+# BLUEPRINTS
+from users.views import users_blueprint
+from admin.views import admin_blueprint
+
+app.register_blueprint(users_blueprint)
+app.register_blueprint(admin_blueprint)
 
 if __name__ == '__main__':
     app.run()
