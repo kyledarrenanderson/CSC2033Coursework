@@ -21,20 +21,16 @@ def register():
             flash('An account with this email already exists')
             return render_template('register.html', form=form)
 
-
-        addUser = "INSERT INTO users (email = form.email.data,"\
-                       "firstName=form.firstName.data,"\
-                       "lastName=form.lastName.data,"\
-                       "educationLevel=form.educationLevel.data,"\
-                       "dateOfBirth=form.dob.data,"\
-                       "password=form.password.data,"\
-                       "takenCS=form.studiedCompSci.data,"\
-                       "phoneNumber=form.phone.data)"
-        mycursor.execute(addUser)
+        addUser = "INSERT INTO users (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " \
+                  "phoneNumber)VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
+        userDetails = (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data, form.password.data, form.studiedCompSci.data, form.phone.data)
+        mycursor.execute(addUser, userDetails)
         db.commit()
 
         return redirect(url_for('users.login'))
     return render_template('register.html', form=form)
+
+
 @users_blueprint.route('/account')
 def account():  # put application's code here
     return render_template('account.html')
