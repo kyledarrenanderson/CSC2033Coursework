@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, session, request
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import data_required, Email
@@ -10,7 +10,6 @@ from werkzeug.security import check_password_hash
 from app import db
 from models import User
 from users.forms import RegisterForm, LoginForm
-from flask_login import login_required, current_user
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 

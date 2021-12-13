@@ -1,11 +1,6 @@
-click
 Flask
-itsdangerous
-Jinja2
-MarkupSafe
-pip
-setuptools
-Werkzeug
-wheel
 WTForms
-pymongo
+Werkzeug
+flask_wtf
+mysql
+flask_login

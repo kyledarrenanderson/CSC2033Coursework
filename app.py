@@ -7,10 +7,11 @@ app.config['SECRET_KEY'] = 'toBeChangedLater'
 
 # DATABASE
 db = mysql.connector.connect(
-    host = databaseinfo.hostname,
+    host = databaseinfo.address,
     user = databaseinfo.username,
     password = databaseinfo.password,
-    database= databaseinfo.database,
+    port = databaseinfo.port,
+    database = databaseinfo.database
 )
 
 @app.route('/')
