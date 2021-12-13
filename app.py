@@ -1,10 +1,17 @@
 from flask import Flask, render_template
-
-
+import mysql.connector
+import databaseinfo
 # CONFIG
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'toBeChangedLater'
 
+# DATABASE
+db = mysql.connector.connect(
+    host = databaseinfo.hostname,
+    user = databaseinfo.username,
+    password = databaseinfo.password,
+    database= databaseinfo.database,
+)
 
 @app.route('/')
 def index():  # put application's code here
