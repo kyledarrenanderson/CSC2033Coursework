@@ -1,17 +1,28 @@
 from flask import Flask, render_template
-import mysql.connector
+import mariadb
 import databaseinfo
+from sshtunnel import SSHTunnelForwarder
 # CONFIG
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'toBeChangedLater'
 
+# SSH TUNNEL
+server = SSHTunnelForwarder(
+    'linux.cs.ncl.ac.uk',
+    ssh_username = databaseinfo.sshUsername,
+    ssh_password = databaseinfo.sshPassword,
+    remote_bind_address=('127.0.0.1', 3307)
+)
+
+server.start()
+
 # DATABASE
-db = mysql.connector.connect(
-    host = databaseinfo.address,
-    user = databaseinfo.username,
-    password = databaseinfo.password,
-    port = databaseinfo.port,
-    database = databaseinfo.database
+db = mariadb.connect(
+    host=databaseinfo.address,
+    user=databaseinfo.username,
+    password=databaseinfo.password,
+    port=databaseinfo.port,
+    database=databaseinfo.database
 )
 
 @app.route('/')

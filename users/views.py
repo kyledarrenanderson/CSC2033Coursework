@@ -6,10 +6,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import data_required, Email
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from app import db
-from models import User
 from users.forms import RegisterForm, LoginForm
+
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
@@ -17,25 +17,16 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-
     if form.validate_on_submit():
-        mycursor = db.cursor()
+        chosenEmail = form.email.data
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO User (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " \
+                  "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ", (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data, generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
 
-        existingUser = "SELECT * FROM users WHERE email = " + form.email.data
-
-        mycursor.execute(existingUser)
-
-        if existingUser:
-            flash('An account with this email already exists')
-            return render_template('register.html', form=form)
-
-        addUser = "INSERT INTO users (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " \
-                  "phoneNumber, role)VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) "
-        userDetails = (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data, form.password.data, form.studiedCompSci.data, form.phone.data, "user")
-        mycursor.execute(addUser, userDetails)
         db.commit()
 
         return redirect(url_for('users.login'))
+    print(form.errors)
     return render_template('register.html', form=form)
 
 
@@ -56,8 +47,8 @@ def login():
         session['logins'] +=1
 
         mycursor = db.cursor()
-        correctUsername = "SELECT * FROM users WHERE email = " + form.email.data
-        correctPassword = "SELECT * FROM users WHERE email = " + form.email.data + " AND password =" + check_password_hash(form.password.data)
+        correctUsername = "SELECT * FROM users WHERE email =?", (form.email.data)
+        correctPassword = "SELECT * FROM users WHERE email =? AND password =?", (form.email.data, check_password_hash(form.password.data))
 
         mycursor.execute(correctUsername, correctPassword)
         if not correctUsername or not correctPassword:
@@ -69,11 +60,7 @@ def login():
                 flash('Please check your login details and try again. 2 login attempts remaining')
 
             return render_template('login.html', form=form)
-
-    if current_user.role == 'admin':
-        return redirect(url_for('admin.admin'))
-    else:
-        return redirect(url_for('users.account'))
+    return render_template('login.html', form=form)
 
 
 def logout():

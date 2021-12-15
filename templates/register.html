@@ -4,7 +4,7 @@
     <div class="forms">
         <h1>Register</h1>
         <form method="POST">
-            {{ form.csrf_token() }}
+            {{ form.csrf_token }}
             {{ form.firstName(class="inputs", placeholder="First Name") }}
             {{ form.lastName(class="inputs", placeholder="Last Name") }}
             {{ form.email(class="inputs", placeholder="Email") }}

@@ -2,6 +2,7 @@ from wtforms import StringField, SubmitField, DateField, SelectField, PasswordFi
 from flask_wtf import FlaskForm
 from wtforms.validators import data_required, Email, Length, EqualTo, ValidationError
 import re
+import datetime
 
 
 def character_check(form, field):
@@ -16,7 +17,7 @@ class RegisterForm(FlaskForm):
     lastName = StringField(validators=[data_required(), character_check])
     email = StringField(validators=[data_required(), Email()])
     phone = StringField(validators=[data_required()])
-    dob = DateField('DatePicker', format='%y-%m-%d',validators=[data_required()])
+    dob = DateField('DatePicker: ', validators=[data_required()])
     password = StringField(validators=[data_required(), Length(min=8, message='password must be 8 characters or more')])
     confirmPassword = StringField(validators=[data_required(), EqualTo('password', message='Passwords do not match')])
     educationLevel = SelectField(label='Education Level', choices=('None', 'GCSE', 'A Level', 'Bachelors', 'Masters'),
@@ -39,5 +40,5 @@ class RegisterForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField()
-    password= PasswordField()
+    password = PasswordField()
     submit = SubmitField()
