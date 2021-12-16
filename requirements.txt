@@ -1,6 +1,6 @@
 Flask
 WTForms
 Werkzeug
-flask_wtf
-mysql
-flask_login
+mariadb
+sshtunnel
+cryptography

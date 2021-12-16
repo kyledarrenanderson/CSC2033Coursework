@@ -18,9 +18,8 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        chosenEmail = form.email.data
         cursor = db.cursor()
-        cursor.execute("INSERT INTO User (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " \
+        cursor.execute("INSERT INTO User (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " 
                   "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ", (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data, generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
 
         db.commit()
@@ -44,10 +43,10 @@ def login():
         flash("Number of incorrect login attempts exceeded")
     form = LoginForm()
     if form.validate_on_submit():
-        session['logins'] +=1
+        session['logins'] += 1
 
         mycursor = db.cursor()
-        userEmail=form.email.data
+        userEmail = form.email.data
         user = mycursor.execute("SELECT * FROM User WHERE email=?", (userEmail))
         print(user)
         if not user or not check_password_hash(user, form.password.data):

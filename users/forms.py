@@ -18,8 +18,8 @@ class RegisterForm(FlaskForm):
     email = StringField(validators=[data_required(), Email()])
     phone = StringField(validators=[data_required()])
     dob = DateField('DatePicker: ', validators=[data_required()])
-    password = StringField(validators=[data_required(), Length(min=8, message='password must be 8 characters or more')])
-    confirmPassword = StringField(validators=[data_required(), EqualTo('password', message='Passwords do not match')])
+    password = PasswordField(validators=[data_required(), Length(min=8, message='password must be 8 characters or more')])
+    confirmPassword = PasswordField(validators=[data_required(), EqualTo('password', message='Passwords do not match')])
     educationLevel = SelectField(label='Education Level', choices=('None', 'GCSE', 'A Level', 'Bachelors', 'Masters'),
                                  validators=[data_required()])
     studiedCompSci = SelectField(label='Studied Computer Science', choices=('No', 'Yes'), validators=[data_required()])
