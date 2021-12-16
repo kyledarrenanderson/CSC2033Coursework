@@ -47,11 +47,10 @@ def login():
         session['logins'] +=1
 
         mycursor = db.cursor()
-        correctUsername = "SELECT * FROM users WHERE email =?", (form.email.data)
-        correctPassword = "SELECT * FROM users WHERE email =? AND password =?", (form.email.data, check_password_hash(form.password.data))
-
-        mycursor.execute(correctUsername, correctPassword)
-        if not correctUsername or not correctPassword:
+        userEmail=form.email.data
+        user = mycursor.execute("SELECT * FROM User WHERE email=?", (userEmail))
+        print(user)
+        if not user or not check_password_hash(user, form.password.data):
             if session['logins'] == 3:
                 flash('Number of incorrect login attempts exceeded')
             elif session['logins'] == 2:
