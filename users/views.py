@@ -47,9 +47,9 @@ def login():
 
         mycursor = db.cursor()
         userEmail = form.email.data
-        statement = "SELECT * FROM User WHERE email = %s"
-        data = (userEmail, )
-        user = mycursor.execute(statement, data)
+        print(userEmail)
+        mycursor.execute("SELECT * FROM User WHERE email = %s", (userEmail,))
+        user = mycursor.fetchall()
         print(user)
         if not user or not check_password_hash(user, form.password.data):
             if session['logins'] == 3:
