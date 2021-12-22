@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Question</h2>
+
+<p id="demo"></p>
+<script type="text/javascript" src="javascript.js"></script>
+<script>
+    var mydata = JSON.parse(data);
+    function Easy(){
+        for (let i = 0; i <mydata.length; i++) {
+            if (mydata[i].Difficulty === "Easy") {
+                document.write(mydata[i].question)
+                document.write("<br>")
+            }
+        }
+    }
+    function Normal(){
+        for (let i = 0; i <mydata.length; i++) {
+            if (mydata[i].Difficulty === "Normal") {
+                document.write(mydata[i].question)
+                document.write("<br>")
+            }
+        }
+    }
+    function Hard() {
+        for (let i = 0; i <mydata.length; i++) {
+            if (mydata[i].Difficulty === "Hard") {
+                document.write(mydata[i].question)
+                document.write("<br>")
+            }
+        }
+    }
+</script>
+<button type="button" onclick="Easy()">Easy</button>
+<button type="button" onclick="Normal()">Normal</button>
+<button type="button" onclick="Hard()">Hard</button>
+</body>
+</html>
