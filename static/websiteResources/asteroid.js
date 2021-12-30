@@ -7,12 +7,13 @@ sprite.src = "https://i.imgur.com/ieMCMXc.png";
 
 function game() {
 
+    // create the canvas
     const canvas = document.getElementById('game'),
         context = canvas.getContext('2d'),
         canvasWidth = context.canvas.width = window.innerWidth,
         canvasHeight = context.canvas.height = window.innerHeight;
 
-    var _player = {};
+    var _player = {rotation: 0};
 
     canvas.addEventListener('click', shoot);
     canvas.addEventListener('mousemove', aim);
@@ -21,8 +22,9 @@ function game() {
 
     }
 
+    // rotate the player to mouse position
     function aim(obj) {
-
+        _player.rotation = Math.atan2(obj.offsetX - canvasWidth/2, -(obj.offsetY - canvasHeight/2));
     }
 
     function player() {
@@ -30,7 +32,8 @@ function game() {
 
 
         context.translate(canvasWidth/2, canvasHeight/2);
-        context.drawImage(sprite, 0, 0, 64, 128, -32, -64, 32, 64);
+        context.rotate(_player.rotation );
+        context.drawImage(sprite, 0, 0, 64, 128, -32, -64, 64, 128);
         context.restore();
     }
 
