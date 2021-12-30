@@ -52,7 +52,11 @@ function game() {
 
     // rotate the player to mouse position and shoot
     function aimShoot(obj) {
-        _player.rotation = Math.atan2(obj.offsetX - canvasWidth/2, -(obj.offsetY - canvasHeight/2));
+        var rect = canvas.getBoundingClientRect();
+        var mouseX = obj.clientX - rect.left;
+        var mouseY = obj.clientY - rect.top;
+        _player.rotation = Math.atan2(mouseX - rect.right/2,
+                                        -(mouseY - rect.bottom/2));
         createBullet(0, _player.rotation);
     }
 
