@@ -10,8 +10,8 @@ function game() {
     // create the canvas
     const canvas = document.getElementById('game'),
         context = canvas.getContext('2d'),
-        canvasWidth = context.canvas.width = window.innerWidth,
-        canvasHeight = context.canvas.height = window.innerHeight;
+        canvasWidth = context.canvas.width,
+        canvasHeight = context.canvas.height;
 
     var bullets = [];
     var asteroids = [];
@@ -35,7 +35,7 @@ function game() {
         context.rotate(_player.rotationTrue);
         context.drawImage(sprite, 0, 0, 64, 128, -32, -64, 64, 128);
         context.restore();
-        gameUpdate();
+
     }
 
     //create new bullet
@@ -52,12 +52,13 @@ function game() {
 
     // rotate the player to mouse position and shoot
     function aimShoot(obj) {
-        var rect = canvas.getBoundingClientRect();
-        var mouseX = obj.clientX - rect.left;
-        var mouseY = obj.clientY - rect.top;
-        _player.rotation = Math.atan2(mouseX - rect.right/2,
-                                        -(mouseY - rect.bottom/2));
+        var mousePos = getMousePos(canvas,obj);
+
+        alert(mousePos.x + ',' + mousePos.y);
+        _player.rotation = Math.atan2(mousePos.x - canvasWidth / 2,
+            -(mousePos.y - canvasHeight / 2));
         createBullet(0, _player.rotation);
+
     }
 
     // manages global game updating
@@ -79,8 +80,9 @@ function game() {
     function startGame() {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         context.beginPath();
+        gameUpdate();
         player();
-
+        context.fillRect(20, canvasHeight - 190, canvasWidth - 40 , 170);
     }
 
     function init() {
@@ -94,4 +96,12 @@ function game() {
     function interlope(a, b, x) {
       return a * (1-x) + b * x;
     }
+
+    function getMousePos(canvas, event) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: event.pageX - rect.left,
+          y: event.pageY - rect.top
+        };
+      }
 }
