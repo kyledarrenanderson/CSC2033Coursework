@@ -17,6 +17,7 @@ function game() {
     var asteroids = [];
     var score = 0;
     var gameActive = true;
+    var canvasRect = canvas.getBoundingClientRect();
 
     var _player = {
         rotation: 0,
@@ -54,11 +55,13 @@ function game() {
     function aimShoot(obj) {
         var mousePos = getMousePos(canvas,obj);
 
-        alert(mousePos.x + ',' + mousePos.y);
-        _player.rotation = Math.atan2(mousePos.x - canvasWidth / 2,
-            -(mousePos.y - canvasHeight / 2));
-        createBullet(0, _player.rotation);
+        //alert(mousePos.x + ',' + mousePos.y);
 
+        if(mousePos.y < canvasHeight - 190) {
+            _player.rotation = Math.atan2(mousePos.x - canvasWidth / 2,
+                -(mousePos.y - canvasHeight / 2));
+            createBullet(0, _player.rotation);
+        }
     }
 
     // manages global game updating
@@ -98,10 +101,10 @@ function game() {
     }
 
     function getMousePos(canvas, event) {
-        var rect = canvas.getBoundingClientRect();
+
         return {
-          x: event.pageX - rect.left,
-          y: event.pageY - rect.top
+          x: event.pageX - canvasRect.left,
+          y: event.pageY - canvasRect.top
         };
       }
 }
