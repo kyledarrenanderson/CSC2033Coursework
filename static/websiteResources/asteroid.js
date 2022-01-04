@@ -26,9 +26,11 @@ function game() {
 
     var _player = {
         rotation: 0,
-        rotationTrue: 0};
+        rotationTrue: 0,
+        x: canvasWidth/2,
+        y: canvasHeight/2 + 250};
 
-    canvas.addEventListener('click', aimShoot);
+    canvas.addEventListener('click', clickFunctions);
     canvas.addEventListener('mousemove', buttonselect);
 
     // player
@@ -38,7 +40,7 @@ function game() {
         _player.rotationTrue = interlope(_player.rotationTrue,
                                         _player.rotation,
                                         1)
-        context.translate(canvasWidth/2, canvasHeight/2);
+        context.translate(_player.x, _player.y);
         context.rotate(_player.rotationTrue);
         context.drawImage(sprite, 0, 0, 64, 128, -32, -64, 64, 128);
         context.restore();
@@ -48,19 +50,20 @@ function game() {
     //create new bullet
     function createBullet(id, bulletAngle) {
         var bullet = {
-            x : canvasWidth/2,
-            y : canvasHeight/2,
+            x : _player.x,
+            y : _player.y,
             angle : bulletAngle,
             hit : false,
             answerID : id
         }
+        questions.splice(id,1);
         bullets.push(bullet);
     }
 
     function createAsteroid(id, angle) {
         var asteroid = {
-            x : canvasWidth/2,
-            y : canvasHeight/2,
+            x : _player.x,
+            y : _player.y,
             hit : false,
             answerID : id,
             answer : ""
@@ -81,18 +84,18 @@ function game() {
         context.restore();
     }
 
-    // rotate the player to mouse position and shoot
-    function aimShoot(obj) {
+    // handle clicking
+    function clickFunctions(obj) {
         var mousePos = getMousePos(canvas,obj);
 
-        //alert(mousePos.x + ',' + mousePos.y);
-
+        // if mouse is not in the question box then shoot
         if(mousePos.y < canvasHeight - 190) {
-            _player.rotation = Math.atan2(mousePos.x - canvasWidth / 2,
-                -(mousePos.y - canvasHeight / 2));
-            createBullet(0, _player.rotation);
+            _player.rotation = Math.atan2(mousePos.x - _player.x,
+                -(mousePos.y - _player.y));
+            createBullet(activeShot, _player.rotation);
         }
         else {
+            // if player clicks arrows then change question
             if( Math.sqrt((mousePos.x - 90)**2 +
             (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
                 activeShot = activeShot - 1;
@@ -101,10 +104,11 @@ function game() {
                 (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
                 activeShot = activeShot + 1;
             }
-            activeShot = ((activeShot % asteroidNumber) + asteroidNumber) % asteroidNumber;
+
         }
     }
 
+    // add glowing animation for if mouse is over button
     function buttonselect(obj) {
         var mousePos = getMousePos(canvas,obj);
 
@@ -126,9 +130,9 @@ function game() {
         for (var i = 0;  i < bullets.length; i++) {
             if (!bullets[i].hit) {
                 context.save();
-                context.translate(canvasWidth/2,canvasHeight/2);
+                context.translate(_player.x,_player.y);
                 context.rotate(bullets[i].angle);
-                context.drawImage(sprite, 65, 0, 96, 32, bullets[i].x-canvasWidth/2-16-8, bullets[i].y-canvasHeight/2-16, 96, 32);
+                context.drawImage(sprite, 65, 0, 96, 32, bullets[i].x-_player.x-16-8, bullets[i].y-_player.y-16, 96, 32);
                 context.restore();
 
                 bullets[i].x = bullets[i].x + 15 * Math.cos(bullets[i].angle/180- Math.PI/2);
@@ -136,13 +140,14 @@ function game() {
             }
         }
     }
-
+    // TODO: Game needs to end when player misses a shot!
     function startGame() {
         if(gameActive) {
+            // randomise the questions and answers at start of game
             if(questions.length == 0){
                 var mydata = JSON.parse(data);
                 shuffle(mydata);
-                for (let i = 0; i <mydata.length; i++) {
+                for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
                     if (mydata[i].Difficulty === "Normal") {
                         questions.push(mydata[i].question);
                         answers.push(mydata[i].answer);
@@ -157,11 +162,20 @@ function game() {
             context.fillStyle = "black";
             context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
 
+            remainder = questions.length;
+            activeShot = ((activeShot % remainder) + remainder) % remainder;
+
             context.font = "60px verdana";
             context.fillStyle = "white";
             context.textAlign = "center";
             context.fillText(questions[activeShot], canvasWidth/2, canvasHeight - 190 + 170/2);
 
+            //*
+            context.font = "60px verdana";
+            context.fillStyle = "white";
+            context.textAlign = "center";
+            context.fillText(questions, canvasWidth/2, canvasHeight - 390 + 170/2);
+            //*/
             questionSelect();
         }
     }
