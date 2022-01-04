@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", game);
 
 // Load Game Sprites
 var sprite = new Image();
-sprite.src = "https://i.imgur.com/WhFvtSa.png";
+sprite.src = "https://i.imgur.com/szUrGxf.png";
 
 function game() {
 
@@ -22,12 +22,14 @@ function game() {
     var score = 0;
     var gameActive = true;
     var canvasRect = canvas.getBoundingClientRect();
+    var whichButton = 0;
 
     var _player = {
         rotation: 0,
         rotationTrue: 0};
 
     canvas.addEventListener('click', aimShoot);
+    canvas.addEventListener('mousemove', buttonselect);
 
     // player
     function player() {
@@ -65,6 +67,20 @@ function game() {
         }
     }
 
+    function questionSelect() {
+        context.save();
+        context.translate(90, canvasHeight - 190 + 170/2);
+        context.rotate(0);
+        context.drawImage(sprite, 0, [128,320,128][whichButton], 192, 192, -96, -96, 192, 192);
+        context.restore();
+
+        context.save();
+        context.translate(canvasWidth - 90, canvasHeight - 190 + 170/2);
+        context.rotate(Math.PI);
+        context.drawImage(sprite, 0, [128,128,320][whichButton], 192, 192, -96, -96, 192, 192);
+        context.restore();
+    }
+
     // rotate the player to mouse position and shoot
     function aimShoot(obj) {
         var mousePos = getMousePos(canvas,obj);
@@ -76,8 +92,34 @@ function game() {
                 -(mousePos.y - canvasHeight / 2));
             createBullet(0, _player.rotation);
         }
+        else {
+            if( Math.sqrt((mousePos.x - 90)**2 +
+            (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
+                activeShot = activeShot - 1;
+            }
+            else if( Math.sqrt((mousePos.x - (canvasWidth - 90))**2 +
+                (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
+                activeShot = activeShot + 1;
+            }
+            activeShot = ((activeShot % asteroidNumber) + asteroidNumber) % asteroidNumber;
+        }
     }
 
+    function buttonselect(obj) {
+        var mousePos = getMousePos(canvas,obj);
+
+        if( Math.sqrt((mousePos.x - 90)**2 +
+            (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
+            whichButton = 1;
+        }
+        else if( Math.sqrt((mousePos.x - (canvasWidth - 90))**2 +
+            (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
+            whichButton = 2;
+        }
+        else {
+            whichButton = 0;
+        }
+    }
 
     // manages global game updating
     function gameUpdate() {
@@ -111,13 +153,16 @@ function game() {
             context.beginPath();
             gameUpdate();
             player();
+
             context.fillStyle = "black";
             context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
 
             context.font = "60px verdana";
             context.fillStyle = "white";
             context.textAlign = "center";
-            context.fillText(questions[0], canvasWidth/2, canvasHeight - 190 + 170/2);
+            context.fillText(questions[activeShot], canvasWidth/2, canvasHeight - 190 + 170/2);
+
+            questionSelect();
         }
     }
 
@@ -149,4 +194,5 @@ function game() {
             array[j] = temp;
         }
     }
+
 }
