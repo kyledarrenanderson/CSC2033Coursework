@@ -17,6 +17,8 @@ function game() {
     var activeShot = 0;
     var bullets = [];
     var asteroids = [];
+    var questions = [];
+    var answers = [];
     var score = 0;
     var gameActive = true;
     var canvasRect = canvas.getBoundingClientRect();
@@ -94,11 +96,29 @@ function game() {
     }
 
     function startGame() {
-        context.clearRect(0, 0, canvasWidth, canvasHeight);
-        context.beginPath();
-        gameUpdate();
-        player();
-        context.fillRect(20, canvasHeight - 190, canvasWidth - 40 , 170);
+        if(gameActive) {
+            if(questions.length == 0){
+                var mydata = JSON.parse(data);
+                shuffle(mydata);
+                for (let i = 0; i <mydata.length; i++) {
+                    if (mydata[i].Difficulty === "Normal") {
+                        questions.push(mydata[i].question);
+                        answers.push(mydata[i].answer);
+                    }
+                }
+            }
+            context.clearRect(0, 0, canvasWidth, canvasHeight);
+            context.beginPath();
+            gameUpdate();
+            player();
+            context.fillStyle = "black";
+            context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
+
+            context.font = "60px verdana";
+            context.fillStyle = "white";
+            context.textAlign = "center";
+            context.fillText(questions[0], canvasWidth/2, canvasHeight - 190 + 170/2);
+        }
     }
 
     function init() {
@@ -114,10 +134,19 @@ function game() {
     }
 
     function getMousePos(canvas, event) {
-
         return {
           x: event.pageX - canvasRect.left,
           y: event.pageY - canvasRect.top
         };
-      }
+    }
+
+    function shuffle(array) {
+        var result = [];
+        for(let i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
 }
