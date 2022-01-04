@@ -13,6 +13,8 @@ function game() {
         canvasWidth = context.canvas.width,
         canvasHeight = context.canvas.height;
 
+    var asteroidNumber = 5;
+    var activeShot = 0;
     var bullets = [];
     var asteroids = [];
     var score = 0;
@@ -51,6 +53,16 @@ function game() {
         bullets.push(bullet);
     }
 
+    function createAsteroid(id, angle) {
+        var asteroid = {
+            x : canvasWidth/2,
+            y : canvasHeight/2,
+            hit : false,
+            answerID : id,
+            answer : ""
+        }
+    }
+
     // rotate the player to mouse position and shoot
     function aimShoot(obj) {
         var mousePos = getMousePos(canvas,obj);
@@ -63,6 +75,7 @@ function game() {
             createBullet(0, _player.rotation);
         }
     }
+
 
     // manages global game updating
     function gameUpdate() {
