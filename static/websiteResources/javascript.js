@@ -6,7 +6,7 @@ data =
     '{"Difficulty" : "Easy", "question" : "A question a lot more easy", "answer" : "A question a lot more easy"},' +
     '{"Difficulty" : "Easy", "question" : "A question that is rather easy", "answer" : "A question that is rather easy"},' +
     '{"Difficulty" : "Easy", "question" : "A question with an easy answer", "answer" : "A question with an easy answer"},' +
-    '{"Difficulty" : "Easy", "question" : "A easy enough question", "answer" "A easy enough question": },' +
+    '{"Difficulty" : "Easy", "question" : "A easy enough question", "answer" : "A easy enough question" },' +
     '{"Difficulty" : "Normal", "question" : "1", "answer" : "1"},' +
     '{"Difficulty" : "Normal", "question" : "2", "answer" : "2"},' +
     '{"Difficulty" : "Normal", "question" : "3", "answer" : "3"},' +
