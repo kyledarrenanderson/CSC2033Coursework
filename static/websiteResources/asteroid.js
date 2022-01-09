@@ -20,7 +20,7 @@ function game() {
     var questions = [];
     var answers = [];
     var score = 0;
-    var gameActive = true;
+    var gameActive = false;
     var canvasRect = canvas.getBoundingClientRect();
     var whichButton = 0;
 
@@ -163,19 +163,25 @@ function game() {
         }
     }
     // TODO: Game needs to end when player misses a shot!
-    function startGame() {
-        if(gameActive) {
-            // randomise the questions and answers at start of game
-            if(questions.length == 0){
-                var mydata = JSON.parse(data);
-                shuffle(mydata);
-                for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
-                    if (mydata[i].Difficulty === "Normal") {
-                        questions.push(mydata[i].question);
-                        answers.push(mydata[i].answer);
-                    }
-                }
+    function preGameSetUp() {
+        // randomise the questions and answers at start of game
+
+        var mydata = JSON.parse(data);
+        shuffle(mydata);
+        for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
+            if (mydata[i].Difficulty === "Normal") {
+                questions.push(mydata[i].question);
+                answers.push(mydata[i].answer);
             }
+        }
+        gameActive = true;
+    }
+    function startGame() {
+        if(!gameActive && questions.length == 0) {
+            preGameSetUp();
+        }
+        if(gameActive) {
+
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.beginPath();
             gameUpdate();
@@ -187,6 +193,7 @@ function game() {
     }
 
     function init() {
+
         window.requestAnimationFrame(init);
         startGame();
     }
