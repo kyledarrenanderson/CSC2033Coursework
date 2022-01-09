@@ -62,14 +62,35 @@ function game() {
 
     function createAsteroid(id, angle) {
         var asteroid = {
-            x : _player.x,
-            y : _player.y,
+            x : _player.x + 50 * Math.cos(angle),
+            y : _player.y + 50 * Math.sin(angle),
             hit : false,
             answerID : id,
             answer : ""
         }
+        asteroids.push(asteroid);
     }
 
+    // draw the question box
+    function drawQuestionBox() {
+        context.fillStyle = "black";
+        context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
+
+        var remainder = questions.length;
+        activeShot = ((activeShot % remainder) + remainder) % remainder;
+
+        context.font = "60px verdana";
+        context.fillStyle = "white";
+        context.textAlign = "center";
+        context.fillText(questions[activeShot], canvasWidth/2, canvasHeight - 190 + 170/2);
+
+        //*
+        context.font = "60px verdana";
+        context.fillStyle = "white";
+        context.textAlign = "center";
+        context.fillText(questions, canvasWidth/2, canvasHeight - 390 + 170/2);
+        //*/
+    }
     function questionSelect() {
         context.save();
         context.translate(90, canvasHeight - 190 + 170/2);
@@ -127,6 +148,7 @@ function game() {
 
     // manages global game updating
     function gameUpdate() {
+        // movement of the bullets fired
         for (var i = 0;  i < bullets.length; i++) {
             if (!bullets[i].hit) {
                 context.save();
@@ -158,24 +180,8 @@ function game() {
             context.beginPath();
             gameUpdate();
             player();
+            drawQuestionBox();
 
-            context.fillStyle = "black";
-            context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
-
-            remainder = questions.length;
-            activeShot = ((activeShot % remainder) + remainder) % remainder;
-
-            context.font = "60px verdana";
-            context.fillStyle = "white";
-            context.textAlign = "center";
-            context.fillText(questions[activeShot], canvasWidth/2, canvasHeight - 190 + 170/2);
-
-            //*
-            context.font = "60px verdana";
-            context.fillStyle = "white";
-            context.textAlign = "center";
-            context.fillText(questions, canvasWidth/2, canvasHeight - 390 + 170/2);
-            //*/
             questionSelect();
         }
     }
