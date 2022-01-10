@@ -170,8 +170,17 @@ function game() {
             }
         }
         bullets = tempBullets;
+
         for (var i = 0;  i < asteroids.length; i++) {
             if (!asteroids[i].hit) {
+                for (var o = 0;  o < bullets.length; o++) {
+                    if (pointInCircle(bullets[o].x, bullets[o].y,
+                        asteroids[i].x, asteroids[i].y, 86)) {
+                            asteroids[i].hit = true;
+                            bullets[o].hit = true;
+                    }
+                }
+
                 context.save();
                 context.translate(asteroids[i].x,asteroids[i].y);
                 context.rotate(asteroids[i].angle);
@@ -260,7 +269,7 @@ function game() {
     }
 
     function pointInCircle(x, y, cX, cY, cRad) {
-        return Math.sqrt((x - cX)**2 + (y - cY)**2) < cRad;
+        return (Math.sqrt((x - cX)**2 + (y - cY)**2) < cRad);
     }
 
 }
