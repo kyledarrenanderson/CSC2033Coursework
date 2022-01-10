@@ -2,14 +2,14 @@
 window.addEventListener("DOMContentLoaded", game);
 
 // Load Game Sprites
-var sprite = new Image();
+const sprite = new Image();
 sprite.src = "https://i.imgur.com/aNhlML8.png";
 
 /**
  * Main logic of the game.
  *
  * @author Erick Grant Daleon
- * @version 0.9
+ * @version 0.5
  * @since 30-12-2021
  */
 function game() {
@@ -39,9 +39,11 @@ function game() {
         y: canvasHeight/2 + 250};
 
     canvas.addEventListener('click', clickFunctions);
-    canvas.addEventListener('mousemove', buttonselect);
+    canvas.addEventListener('mousemove', buttonSelect);
 
-    // player
+    /**
+     * Represents the player and handles its rendering.
+     */
     function player() {
         context.save();
         // interpolation needs to rotate via shortest angle
@@ -55,7 +57,11 @@ function game() {
 
     }
 
-    //create new bullet
+    /**
+     * Represents shots the player fired.
+     * @param {int} id - ID of question the bullet represents.
+     * @param {float} bulletAngle - Angle of bullet and direction of travel.
+     */
     function createBullet(id, bulletAngle) {
         let bullet = {
             x : _player.x,
@@ -68,6 +74,11 @@ function game() {
         bullets.push(bullet);
     }
 
+    /**
+     * Represents asteroids containing the answers.
+     * @param {int} id - ID of answer asteroid contains.
+     * @param {number} angle - Defines the angle of the starting position of asteroid.
+     */
     function createAsteroid(id, angle) {
         let asteroid = {
             x : _player.x + 750 * Math.cos(angle),
@@ -80,7 +91,9 @@ function game() {
         asteroids.push(asteroid);
     }
 
-    // draw the question box
+    /**
+     * Draws the box that contains the questions and the questions themselves.
+     */
     function drawQuestionBox() {
         context.fillStyle = "black";
         context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
@@ -101,6 +114,9 @@ function game() {
         //*/
     }
 
+    /**
+     * Draws the buttons used to change the selected question.
+     */
     function questionSelect() {
         context.save();
         context.translate(90, canvasHeight - 190 + 170/2);
@@ -115,7 +131,9 @@ function game() {
         context.restore();
     }
 
-    // handle clicking
+    /**
+     * Handles actions done by the player clicking.
+     */
     function clickFunctions(obj) {
         let mousePos = getMousePos(canvas,obj);
 
@@ -139,8 +157,10 @@ function game() {
         }
     }
 
-    // add glowing animation for if mouse is over button
-    function buttonselect(obj) {
+    /**
+     * Handles the glowing animation for the question selection buttons.
+     */
+    function buttonSelect(obj) {
         let mousePos = getMousePos(canvas,obj);
 
         if(pointInCircle(mousePos.x, mousePos.y
@@ -156,7 +176,12 @@ function game() {
         }
     }
 
-    // manages global game updating
+    /**
+     * Manages bullet and asteroid movement/actions.
+     * This cycles through each bullet and asteroid and updates their
+     * position and status. Bullets are removed from the bullet array
+     * when they leave the canvas or hit an asteroid.
+     */
     function gameUpdate() {
         // movement of the bullets fired
         let tempBullets = bullets;
@@ -177,7 +202,7 @@ function game() {
             }
         }
         bullets = tempBullets;
-
+        // movement of asteroids
         for (let i = 0;  i < asteroids.length; i++) {
             if (!asteroids[i].hit) {
                 for (let o = 0;  o < bullets.length; o++) {
@@ -208,6 +233,12 @@ function game() {
         //score+=0.1;
     }
     // TODO: Game needs to end when player misses a shot!
+    // TODO: Need to generate questions+answers based on selected difficulty!
+    /**
+     * Handles tasks that need to be done once before the game starts.
+     * Includes randomising questions (based on difficulty) and spawning
+     * the answer asteroids.
+     */
     function preGameSetUp() {
         // randomise the questions and answers at start of game
         let mydata = JSON.parse(data);
@@ -219,14 +250,17 @@ function game() {
             }
         }
         gameActive = true;
-
+        // create the asteroids.
         for (let i = 0; i < asteroidNumber; i++) {
             createAsteroid(i, -(Math.PI)/(asteroidNumber-1) * i);
         }
         //alert(asteroids[0].x);
     }
+    /**
+     * Starts the game.
+     */
     function startGame() {
-        if(!gameActive && questions.length == 0) {
+        if(!gameActive && questions.length === 0) {
             preGameSetUp();
         }
         if(gameActive) {
@@ -262,7 +296,6 @@ function game() {
     }
 
     function shuffle(array) {
-        let result = [];
         for(let i = array.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             let temp = array[i];
