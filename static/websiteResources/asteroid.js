@@ -136,12 +136,12 @@ function game() {
     function buttonselect(obj) {
         var mousePos = getMousePos(canvas,obj);
 
-        if( Math.sqrt((mousePos.x - 90)**2 +
-            (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
+        if(pointInCircle(mousePos.x, mousePos.y
+            , 90, (canvasHeight - 190 + 170/2), 48)) {
             whichButton = 1;
         }
-        else if( Math.sqrt((mousePos.x - (canvasWidth - 90))**2 +
-            (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
+        else if(pointInCircle(mousePos.x, mousePos.y,
+            canvasWidth - 90, (canvasHeight - 190 + 170/2), 48)) {
             whichButton = 2;
         }
         else {
@@ -248,6 +248,10 @@ function game() {
             array[i] = array[j];
             array[j] = temp;
         }
+    }
+
+    function pointInCircle(x, y, cX, cY, cRad) {
+        return Math.sqrt((x - cX)**2 + (y - cY)**2) < cRad;
     }
 
 }
