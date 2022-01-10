@@ -5,6 +5,13 @@ window.addEventListener("DOMContentLoaded", game);
 var sprite = new Image();
 sprite.src = "https://i.imgur.com/aNhlML8.png";
 
+/**
+ * Main logic of the game.
+ *
+ * @author Erick Grant Daleon
+ * @version 0.9
+ * @since 30-12-2021
+ */
 function game() {
 
     // create the canvas
@@ -13,19 +20,19 @@ function game() {
         canvasWidth = context.canvas.width,
         canvasHeight = context.canvas.height;
 
-    var asteroidNumber = 5;
-    var activeShot = 0;
-    var bullets = [];
-    var asteroids = [];
-    var questions = [];
-    var answers = [];
-    var score = 0;
-    var gameActive = false;
-    var canvasRect = canvas.getBoundingClientRect();
-    var whichButton = 0;
+    let asteroidNumber = 5;
+    let activeShot = 0;
+    let bullets = [];
+    let asteroids = [];
+    let questions = [];
+    let answers = [];
+    let score = 0;
+    let gameActive = false;
+    let canvasRect = canvas.getBoundingClientRect();
+    let whichButton = 0;
 
 
-    var _player = {
+    let _player = {
         rotation: 0,
         rotationTrue: 0,
         x: canvasWidth/2,
@@ -50,7 +57,7 @@ function game() {
 
     //create new bullet
     function createBullet(id, bulletAngle) {
-        var bullet = {
+        let bullet = {
             x : _player.x,
             y : _player.y,
             angle : bulletAngle,
@@ -62,7 +69,7 @@ function game() {
     }
 
     function createAsteroid(id, angle) {
-        var asteroid = {
+        let asteroid = {
             x : _player.x + 750 * Math.cos(angle),
             y : _player.y + 750 * Math.sin(angle),
             angle : angle,
@@ -78,7 +85,7 @@ function game() {
         context.fillStyle = "black";
         context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
 
-        var remainder = questions.length;
+        let remainder = questions.length;
         activeShot = ((activeShot % remainder) + remainder) % remainder;
 
         context.font = "60px verdana";
@@ -110,7 +117,7 @@ function game() {
 
     // handle clicking
     function clickFunctions(obj) {
-        var mousePos = getMousePos(canvas,obj);
+        let mousePos = getMousePos(canvas,obj);
 
         // if mouse is not in the question box then shoot
         if(mousePos.y < canvasHeight - 190) {
@@ -134,7 +141,7 @@ function game() {
 
     // add glowing animation for if mouse is over button
     function buttonselect(obj) {
-        var mousePos = getMousePos(canvas,obj);
+        let mousePos = getMousePos(canvas,obj);
 
         if(pointInCircle(mousePos.x, mousePos.y
             , 90, (canvasHeight - 190 + 170/2), 48)) {
@@ -152,8 +159,8 @@ function game() {
     // manages global game updating
     function gameUpdate() {
         // movement of the bullets fired
-        var tempBullets = bullets;
-        for (var i = 0;  i < bullets.length; i++) {
+        let tempBullets = bullets;
+        for (let i = 0;  i < bullets.length; i++) {
             if (!bullets[i].hit && pointInBox(bullets[i].x,bullets[i].y, 0,0,
                 canvasWidth, canvasHeight)) {
                 context.save();
@@ -171,9 +178,9 @@ function game() {
         }
         bullets = tempBullets;
 
-        for (var i = 0;  i < asteroids.length; i++) {
+        for (let i = 0;  i < asteroids.length; i++) {
             if (!asteroids[i].hit) {
-                for (var o = 0;  o < bullets.length; o++) {
+                for (let o = 0;  o < bullets.length; o++) {
                     if (pointInCircle(bullets[o].x, bullets[o].y,
                         asteroids[i].x, asteroids[i].y, 86)) {
                             asteroids[i].hit = true;
@@ -203,7 +210,7 @@ function game() {
     // TODO: Game needs to end when player misses a shot!
     function preGameSetUp() {
         // randomise the questions and answers at start of game
-        var mydata = JSON.parse(data);
+        let mydata = JSON.parse(data);
         shuffle(mydata);
         for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
             if (mydata[i].Difficulty === "Normal") {
@@ -255,10 +262,10 @@ function game() {
     }
 
     function shuffle(array) {
-        var result = [];
+        let result = [];
         for(let i = array.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = array[i];
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = array[i];
             array[i] = array[j];
             array[j] = temp;
         }
