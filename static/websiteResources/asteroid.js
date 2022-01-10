@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", game);
 
 // Load Game Sprites
 var sprite = new Image();
-sprite.src = "https://i.imgur.com/szUrGxf.png";
+sprite.src = "https://i.imgur.com/aNhlML8.png";
 
 function game() {
 
@@ -23,6 +23,7 @@ function game() {
     var gameActive = false;
     var canvasRect = canvas.getBoundingClientRect();
     var whichButton = 0;
+
 
     var _player = {
         rotation: 0,
@@ -62,11 +63,12 @@ function game() {
 
     function createAsteroid(id, angle) {
         var asteroid = {
-            x : _player.x + 50 * Math.cos(angle),
-            y : _player.y + 50 * Math.sin(angle),
+            x : _player.x + 650 * Math.cos(angle),
+            y : _player.y + 650 * Math.sin(angle),
+            angle : angle,
             hit : false,
             answerID : id,
-            answer : ""
+            answer : answers[id]
         }
         asteroids.push(asteroid);
     }
@@ -91,6 +93,7 @@ function game() {
         context.fillText(questions, canvasWidth/2, canvasHeight - 390 + 170/2);
         //*/
     }
+
     function questionSelect() {
         context.save();
         context.translate(90, canvasHeight - 190 + 170/2);
@@ -152,20 +155,40 @@ function game() {
         for (var i = 0;  i < bullets.length; i++) {
             if (!bullets[i].hit) {
                 context.save();
-                context.translate(_player.x,_player.y);
+                context.translate(bullets[i].x,bullets[i].y);
                 context.rotate(bullets[i].angle);
-                context.drawImage(sprite, 65, 0, 96, 32, bullets[i].x-_player.x-16-8, bullets[i].y-_player.y-16, 96, 32);
+                context.drawImage(sprite, 65, 0, 96, 32, -16-8, -16, 96, 32);
                 context.restore();
 
-                bullets[i].x = bullets[i].x + 15 * Math.cos(bullets[i].angle/180- Math.PI/2);
-                bullets[i].y = bullets[i].y + 15 * Math.sin(bullets[i].angle/180- Math.PI/2);
+                bullets[i].x = bullets[i].x + 15 * Math.cos(bullets[i].angle-Math.PI/2);
+                bullets[i].y = bullets[i].y + 15 * Math.sin(bullets[i].angle-Math.PI/2);
             }
         }
+
+        for (var i = 0;  i < asteroids.length; i++) {
+            if (!asteroids[i].hit) {
+                context.save();
+                context.translate(asteroids[i].x,asteroids[i].y);
+                context.rotate(asteroids[i].angle);
+                context.drawImage(sprite, 288, 0, 192, 192,
+                                  -80, -80, 192, 192);
+                context.restore();
+
+                context.font = "60px verdana";
+                context.fillStyle = "black";
+                context.textAlign = "center";
+                context.fillText(asteroids[i].angle, asteroids[i].x, asteroids[i].y);
+
+
+                asteroids[i].x = asteroids[i].x - 0.1 * Math.cos(asteroids[i].angle);
+                asteroids[i].y = asteroids[i].y - 0.1 * Math.sin(asteroids[i].angle);
+            }
+        }
+        //score+=0.1;
     }
     // TODO: Game needs to end when player misses a shot!
     function preGameSetUp() {
         // randomise the questions and answers at start of game
-
         var mydata = JSON.parse(data);
         shuffle(mydata);
         for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
@@ -175,6 +198,11 @@ function game() {
             }
         }
         gameActive = true;
+
+        for (let i = 0; i < asteroidNumber; i++) {
+            createAsteroid(i, -(Math.PI)/(asteroidNumber-1) * i);
+        }
+        //alert(asteroids[0].x);
     }
     function startGame() {
         if(!gameActive && questions.length == 0) {
