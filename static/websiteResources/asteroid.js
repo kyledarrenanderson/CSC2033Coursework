@@ -7,6 +7,7 @@ sprite.src = "https://i.imgur.com/aNhlML8.png";
 
 /**
  * Main logic of the game.
+ * Games run at 60 frames per second.
  *
  * @author Erick Grant Daleon
  * @version 0.5
@@ -137,23 +138,23 @@ function game() {
     function clickFunctions(obj) {
         let mousePos = getMousePos(canvas,obj);
 
-        // if mouse is not in the question box then shoot
-        if(mousePos.y < canvasHeight - 190) {
-            _player.rotation = Math.atan2(mousePos.x - _player.x,
-                -(mousePos.y - _player.y));
-            createBullet(activeShot, _player.rotation);
-        }
-        else {
-            // if player clicks arrows then change question
-            if( Math.sqrt((mousePos.x - 90)**2 +
-            (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
-                activeShot = activeShot - 1;
-            }
-            else if( Math.sqrt((mousePos.x - (canvasWidth - 90))**2 +
-                (mousePos.y - (canvasHeight - 190 + 170/2))**2) < 48 ) {
-                activeShot = activeShot + 1;
-            }
+        if(gameActive) {
+            // if mouse is not in the question box then shoot
+            if (mousePos.y < canvasHeight - 190) {
+                _player.rotation = Math.atan2(mousePos.x - _player.x,
+                    -(mousePos.y - _player.y));
+                createBullet(activeShot, _player.rotation);
+            } else {
+                // if player clicks arrows then change question
+                if (Math.sqrt((mousePos.x - 90) ** 2 +
+                    (mousePos.y - (canvasHeight - 190 + 170 / 2)) ** 2) < 48) {
+                    activeShot = activeShot - 1;
+                } else if (Math.sqrt((mousePos.x - (canvasWidth - 90)) ** 2 +
+                    (mousePos.y - (canvasHeight - 190 + 170 / 2)) ** 2) < 48) {
+                    activeShot = activeShot + 1;
+                }
 
+            }
         }
     }
 
@@ -181,6 +182,7 @@ function game() {
      * This cycles through each bullet and asteroid and updates their
      * position and status. Bullets are removed from the bullet array
      * when they leave the canvas or hit an asteroid.
+     * Note: The asteroids hit the player when they're 250 away from the player.
      */
     function gameUpdate() {
         // movement of the bullets fired
@@ -223,14 +225,17 @@ function game() {
                 context.font = "60px verdana";
                 context.fillStyle = "black";
                 context.textAlign = "center";
-                context.fillText(bullets.length, asteroids[i].x, asteroids[i].y);
+                context.fillText(answers[i], asteroids[i].x, asteroids[i].y);
+                //context.fillText(String(Math.floor(score)), asteroids[i].x, asteroids[i].y);
 
-
-                asteroids[i].x = asteroids[i].x - 0.1 * Math.cos(asteroids[i].angle);
-                asteroids[i].y = asteroids[i].y - 0.1 * Math.sin(asteroids[i].angle);
+                if (pointInCircle(asteroids[i].x, asteroids[i].y, _player.x, _player.y, 250)) {
+                    gameActive = false;
+                }
+                // Asteroids should reach distance of 250 with player in 90 seconds
+                asteroids[i].x = asteroids[i].x - (500/(90*60)) * Math.cos(asteroids[i].angle);
+                asteroids[i].y = asteroids[i].y - (500/(90*60)) * Math.sin(asteroids[i].angle);
             }
         }
-        //score+=0.1;
     }
     // TODO: Game needs to end when player misses a shot!
     // TODO: Need to generate questions+answers based on selected difficulty!
