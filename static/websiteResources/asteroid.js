@@ -60,6 +60,7 @@ function game() {
 
     /**
      * Represents shots the player fired.
+     * When the player fires a shot, the question ammo is consumed.
      * @param {int} id - ID of question the bullet represents.
      * @param {float} bulletAngle - Angle of bullet and direction of travel.
      */
@@ -232,8 +233,8 @@ function game() {
                     gameActive = false;
                 }
                 // Asteroids should reach distance of 250 with player in 90 seconds
-                asteroids[i].x = asteroids[i].x - (500/(90*60)) * Math.cos(asteroids[i].angle);
-                asteroids[i].y = asteroids[i].y - (500/(90*60)) * Math.sin(asteroids[i].angle);
+                asteroids[i].x = asteroids[i].x - (500/(120*60)) * Math.cos(asteroids[i].angle);
+                asteroids[i].y = asteroids[i].y - (500/(120*60)) * Math.sin(asteroids[i].angle);
             }
         }
     }
