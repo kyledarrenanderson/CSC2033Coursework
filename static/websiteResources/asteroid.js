@@ -63,8 +63,8 @@ function game() {
 
     function createAsteroid(id, angle) {
         var asteroid = {
-            x : _player.x + 650 * Math.cos(angle),
-            y : _player.y + 650 * Math.sin(angle),
+            x : _player.x + 750 * Math.cos(angle),
+            y : _player.y + 750 * Math.sin(angle),
             angle : angle,
             hit : false,
             answerID : id,
@@ -152,8 +152,10 @@ function game() {
     // manages global game updating
     function gameUpdate() {
         // movement of the bullets fired
+        var tempBullets = bullets;
         for (var i = 0;  i < bullets.length; i++) {
-            if (!bullets[i].hit) {
+            if (!bullets[i].hit && pointInBox(bullets[i].x,bullets[i].y, 0,0,
+                canvasWidth, canvasHeight)) {
                 context.save();
                 context.translate(bullets[i].x,bullets[i].y);
                 context.rotate(bullets[i].angle);
@@ -163,8 +165,11 @@ function game() {
                 bullets[i].x = bullets[i].x + 15 * Math.cos(bullets[i].angle-Math.PI/2);
                 bullets[i].y = bullets[i].y + 15 * Math.sin(bullets[i].angle-Math.PI/2);
             }
+            else {
+                tempBullets.splice(i, 1);
+            }
         }
-
+        bullets = tempBullets;
         for (var i = 0;  i < asteroids.length; i++) {
             if (!asteroids[i].hit) {
                 context.save();
@@ -177,7 +182,7 @@ function game() {
                 context.font = "60px verdana";
                 context.fillStyle = "black";
                 context.textAlign = "center";
-                context.fillText(asteroids[i].angle, asteroids[i].x, asteroids[i].y);
+                context.fillText(bullets.length, asteroids[i].x, asteroids[i].y);
 
 
                 asteroids[i].x = asteroids[i].x - 0.1 * Math.cos(asteroids[i].angle);
@@ -248,6 +253,10 @@ function game() {
             array[i] = array[j];
             array[j] = temp;
         }
+    }
+
+    function pointInBox(x, y, bx1, by1, bx2, by2) {
+        return (x > bx1 && x < bx2 && y > by1 && y < by2);
     }
 
     function pointInCircle(x, y, cX, cY, cRad) {
