@@ -108,7 +108,7 @@ function game() {
         context.textAlign = "center";
         context.fillText(questions[activeShot][1], canvasWidth/2, canvasHeight - 190 + 170/2);
 
-        //*
+        /*
         context.font = "60px verdana";
         context.fillStyle = "white";
         context.textAlign = "center";
@@ -265,9 +265,17 @@ function game() {
             }
         }
         gameActive = true;
-        // create the asteroids.
+        // randomise the position of the asteroids
+        let angleList = [];
         for (let i = 0; i < asteroidNumber; i++) {
-            createAsteroid(i, -(Math.PI)/(asteroidNumber-1) * i);
+            angleList.push(-(Math.PI)/(asteroidNumber-1) * i);
+        }
+        alert(angleList);
+        shuffle(angleList);
+        alert(angleList);
+        // create the asteroids.
+        for (let i = 0; i < angleList.length; i++) {
+            createAsteroid(i, angleList[i]);
         }
         //alert(asteroids[0].x);
     }
