@@ -70,10 +70,10 @@ function game() {
             y : _player.y,
             angle : bulletAngle,
             hit : false,
-            answerID : id
+            questionID : id
         }
-        questions.splice(id,1);
         bullets.push(bullet);
+        questions[id][0] = -1;
     }
 
     /**
@@ -101,14 +101,19 @@ function game() {
         context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
 
         let remainder = questions.length;
-        activeShot = ((activeShot % remainder) + remainder) % remainder;
+        //activeShot = ((activeShot % remainder) + remainder) % remainder;
 
         context.font = "60px verdana";
         context.fillStyle = "white";
         context.textAlign = "center";
-        context.fillText(questions[activeShot], canvasWidth/2, canvasHeight - 190 + 170/2);
+        context.fillText(questions[activeShot][1], canvasWidth/2, canvasHeight - 190 + 170/2);
 
         //*
+        context.font = "60px verdana";
+        context.fillStyle = "white";
+        context.textAlign = "center";
+        context.fillText(String(activeShot), canvasWidth/2, canvasHeight - 290 + 170/2);
+
         context.font = "60px verdana";
         context.fillStyle = "white";
         context.textAlign = "center";
@@ -145,20 +150,20 @@ function game() {
                 _player.rotation = Math.atan2(mousePos.x - _player.x,
                     -(mousePos.y - _player.y));
                 createBullet(activeShot, _player.rotation);
+                activeShot = skipArrayFlag(questions, activeShot,1);
             } else {
                 // if player clicks arrows then change question
                 if (Math.sqrt((mousePos.x - 90) ** 2 +
                     (mousePos.y - (canvasHeight - 190 + 170 / 2)) ** 2) < 48) {
-                    activeShot = activeShot - 1;
+                    activeShot = skipArrayFlag(questions, activeShot,-1);
                 } else if (Math.sqrt((mousePos.x - (canvasWidth - 90)) ** 2 +
                     (mousePos.y - (canvasHeight - 190 + 170 / 2)) ** 2) < 48) {
-                    activeShot = activeShot + 1;
+                    activeShot = skipArrayFlag(questions, activeShot,1);
                 }
 
             }
         }
     }
-
     /**
      * Handles the glowing animation for the question selection buttons.
      */
@@ -211,8 +216,10 @@ function game() {
                 for (let o = 0;  o < bullets.length; o++) {
                     if (pointInCircle(bullets[o].x, bullets[o].y,
                         asteroids[i].x, asteroids[i].y, 86)) {
-                            asteroids[i].hit = true;
                             bullets[o].hit = true;
+                            if(bullets[o].questionID == asteroids[i].answerID) {
+                                asteroids[i].hit = true;
+                            }
                     }
                 }
 
@@ -249,10 +256,12 @@ function game() {
         // randomise the questions and answers at start of game
         let mydata = JSON.parse(data);
         shuffle(mydata);
+        let questionID = 0;
         for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
             if (mydata[i].Difficulty === "Normal") {
-                questions.push(mydata[i].question);
+                questions.push([questionID,mydata[i].question]);
                 answers.push(mydata[i].answer);
+                questionID++;
             }
         }
         gameActive = true;
@@ -318,4 +327,22 @@ function game() {
         return (Math.sqrt((x - cX)**2 + (y - cY)**2) < cRad);
     }
 
+    /**
+     *
+     * @param {2D Array} array2D - Array containing arrays of [flag, value].
+     * @param {int} startPosition - Starting index.
+     * @param {int} direction - Direction of checking flags.
+     * @returns {number} Next available position. -1 If all flags are -1.
+     */
+    function skipArrayFlag(array2D, startPosition, direction) {
+        let arraySize = array2D.length;
+        for (let i = 0; i < arraySize; i++) {
+            startPosition += direction;
+            startPosition = ((startPosition % arraySize) + arraySize) % arraySize;
+            if (array2D[startPosition][0] != -1) {
+                return startPosition;
+            }
+        }
+        return -1;
+    }
 }
