@@ -1,30 +1,39 @@
 from flask import Flask, render_template
-import mariadb
+import textwrap
+import pyodbc
 
 import databaseinfo
-from sshtunnel import SSHTunnelForwarder
+
+
 # CONFIG
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'toBeChangedLater'
 
-# SSH TUNNEL
-server = SSHTunnelForwarder(
-    'linux.cs.ncl.ac.uk',
-    ssh_username = databaseinfo.sshUsername,
-    ssh_password = databaseinfo.sshPassword,
-    remote_bind_address=('127.0.0.1', 3307)
-)
 
-server.start()
+# CREATE CONNECTION STRING
+connection_string = textwrap.dedent('''
+    Driver={driver};
+    Server={server};
+    Database={database};
+    Uid={username};
+    Pwd={password};
+    Encrypt=yes;
+    TrustServerCertificate=no;
+    Connection Timeout = 30;
+    '''.format(
+    driver=databaseinfo.driver,
+    server=databaseinfo.server,
+    database=databaseinfo.database_name,
+    username=databaseinfo.username,
+    password=databaseinfo.password
+))
 
-# DATABASE
-db = mariadb.connect(
-    host=databaseinfo.address,
-    user=databaseinfo.username,
-    password=databaseinfo.password,
-    port=databaseinfo.port,
-    database=databaseinfo.database
-)
+# CREATE PYODBC CONNECTION OBJECT
+db: pyodbc.Connection = pyodbc.connect(connection_string)
+
+# CREATE CURSOR
+cursor: pyodbc.Cursor = db.cursor()
+
 
 @app.route('/')
 def index():  # put application's code here
