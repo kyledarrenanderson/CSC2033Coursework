@@ -1,38 +1,11 @@
 from flask import Flask, render_template
-import textwrap
-import pyodbc
-
-import databaseinfo
+import sql_handler
 
 
 # CONFIG
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'toBeChangedLater'
 
-
-# CREATE CONNECTION STRING
-connection_string = textwrap.dedent('''
-    Driver={driver};
-    Server={server};
-    Database={database};
-    Uid={username};
-    Pwd={password};
-    Encrypt=yes;
-    TrustServerCertificate=no;
-    Connection Timeout = 30;
-    '''.format(
-    driver=databaseinfo.driver,
-    server=databaseinfo.server,
-    database=databaseinfo.database_name,
-    username=databaseinfo.username,
-    password=databaseinfo.password
-))
-
-# CREATE PYODBC CONNECTION OBJECT
-db: pyodbc.Connection = pyodbc.connect(connection_string)
-
-# CREATE CURSOR
-cursor: pyodbc.Cursor = db.cursor()
 
 
 @app.route('/')
