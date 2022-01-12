@@ -1,6 +1,5 @@
 Flask
 WTForms
 Werkzeug
-mariadb
 sshtunnel
-cryptography
+pyodbc

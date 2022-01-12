@@ -7,7 +7,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import data_required, Email
 from werkzeug.security import check_password_hash, generate_password_hash
-from app import db
+from sql_handler import sql_update, sql_get
 from users.forms import RegisterForm, LoginForm
 
 
@@ -18,12 +18,10 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        cursor = db.cursor()
-        cursor.execute("INSERT INTO User (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " 
-                  "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ", (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data, generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
-
-        db.commit()
-
+        sql_update("INSERT INTO Users (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " 
+                  "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                   (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data,
+                    generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
         return redirect(url_for('users.login'))
     print(form.errors)
     return render_template('register.html', form=form)
@@ -45,11 +43,9 @@ def login():
     if form.validate_on_submit():
         session['logins'] += 1
 
-        mycursor = db.cursor()
         userEmail = form.email.data
         print(userEmail)
-        mycursor.execute("SELECT * FROM User WHERE email = %s", (userEmail,))
-        user = mycursor.fetchall()
+        user = sql_get("SELECT * FROM Users WHERE email = %s",(userEmail,))
         print(user)
         if not user or not check_password_hash(user, form.password.data):
             if session['logins'] == 3:

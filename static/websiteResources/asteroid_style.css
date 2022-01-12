@@ -1,0 +1,12 @@
+html {
+    height: 100%;
+    background: #202025;
+    width: 100%;
+}
+
+
+#game {
+    width: 1920px;
+    height: 1080px;
+    border: 1px solid white
+}
