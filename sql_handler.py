@@ -35,4 +35,6 @@ def sql_get(statement, fields):
     cursor: pyodbc.Cursor = db.cursor()
 
     cursor.execute(statement, fields)
-    return cursor.fetchall()
+    data = cursor.fetchall()
+    db.close()
+    return data
