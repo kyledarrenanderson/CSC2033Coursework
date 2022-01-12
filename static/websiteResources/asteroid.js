@@ -184,13 +184,23 @@ function game() {
     }
 
     /**
-     * Manages bullet and asteroid movement/actions.
-     * This cycles through each bullet and asteroid and updates their
+     * Calls all functions that happen every frame.
+     */
+    function gameUpdate() {
+        bulletsUpdate();
+        asteroidsUpdate();
+        player();
+        drawQuestionBox();
+        questionSelect();
+    }
+    /**
+     * Manages bullet movements/actions.
+     * This cycles through each bullet and updates their
      * position and status. Bullets are removed from the bullet array
      * when they leave the canvas or hit an asteroid.
      * Note: The asteroids hit the player when they're 250 away from the player.
      */
-    function gameUpdate() {
+    function bulletsUpdate() {
         // movement of the bullets fired
         let tempBullets = bullets;
         for (let i = 0;  i < bullets.length; i++) {
@@ -209,7 +219,17 @@ function game() {
                 tempBullets.splice(i, 1);
             }
         }
+        // bullets that are no longer rendered are deleted from the array
         bullets = tempBullets;
+    }
+    /**
+     * Manages asteroid movements/actions.
+     * This cycles through each asteroid and updates their
+     * position and status. Asteroids are destroyed when they
+     * are hit by the right bullet. Asteroids also end the game
+     * if they reach a distance of 250 from the player.
+     */
+    function asteroidsUpdate() {
         // movement of asteroids
         for (let i = 0;  i < asteroids.length; i++) {
             if (!asteroids[i].hit) {
@@ -270,9 +290,9 @@ function game() {
         for (let i = 0; i < asteroidNumber; i++) {
             angleList.push(-(Math.PI)/(asteroidNumber-1) * i);
         }
-        alert(angleList);
+        //alert(angleList);
         shuffle(angleList);
-        alert(angleList);
+        //alert(angleList);
         // create the asteroids.
         for (let i = 0; i < angleList.length; i++) {
             createAsteroid(i, angleList[i]);
@@ -287,19 +307,13 @@ function game() {
             preGameSetUp();
         }
         if(gameActive) {
-
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.beginPath();
             gameUpdate();
-            player();
-            drawQuestionBox();
-
-            questionSelect();
         }
     }
 
     function init() {
-
         window.requestAnimationFrame(init);
         startGame();
     }
