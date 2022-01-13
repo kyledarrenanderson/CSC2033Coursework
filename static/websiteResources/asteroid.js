@@ -222,7 +222,8 @@ function game() {
      * This cycles through each asteroid and updates their
      * position and status. Asteroids are destroyed when they
      * are hit by the right bullet. Asteroids also end the game
-     * if they reach a distance of 250 from the player.
+     * if they reach a distance of 250 from the player. If the
+     * player clicks the wrong asteroid, the game also ends.
      */
     function asteroidsUpdate() {
         // movement of asteroids
@@ -275,6 +276,7 @@ function game() {
         player();
         drawQuestionBox();
         questionSelect();
+        // end game if all asteroids are destroyed or player misses last asteroid.
         if(activeShot == -1 && bullets.length == 0) {
             if(asteroids.length > 0) {
                 game_state = STATE_GAMEWIN;
