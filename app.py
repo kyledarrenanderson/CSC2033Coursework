@@ -1,10 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from sqlalchemy import create_engine
 import databaseinfo
 import sql_handler
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
-
+import logging
+from functools import wraps
 
 import urllib
 params = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};SERVER=csc2033-team42-fdmgroup.database.windows.net;DATABASE=csc2033_team42FDMGroup;UID=csc2033_team42;PWD="+databaseinfo.password)
@@ -16,19 +17,27 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "mssql+pyodbc:///?odbc_connect=%s" % par
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
+def requires_roles(*roles):
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if current_user.role not in roles:
+                logging.warning('SECURITY - Unauthorised access attempt [%s, %s, %s, %s]',
+                             current_user.id,
+                             current_user.username,
+                             current_user.role,
+                             request.remote_addr)
+                # Redirect the user to an unauthorised notice!
+                return render_template('403.html')
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper
+
+
 @app.route('/')
 def index():  # put application's code here
     return render_template('index.html')
-
-
-@app.route('/learningResources')
-def learningResources():  # put application's code here
-    return render_template('learningResources.html')
-
-
-@app.route('/leaderboard')
-def leaderboard():  # put application's code here
-    return render_template('leaderboard.html')
 
 
 @app.route('/aboutUs')

@@ -10,6 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from sql_handler import sql_update, sql_get
 from users.forms import RegisterForm, LoginForm
 from models import User
+from app import requires_roles
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
@@ -23,7 +24,6 @@ def register():
                    (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data,
                     generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
         return redirect(url_for('users.login'))
-    print(form.errors)
     return render_template('register.html', form=form)
 
 
@@ -66,6 +66,24 @@ def login():
 
     return render_template('login.html', form=form)
 
+
+
+@users_blueprint.route('/learningResources')
+@login_required
+@requires_roles('user')
+def learningResources():  # put application's code here
+    return render_template('learningResources.html')
+
+
+@users_blueprint.route('/leaderboard')
+@login_required
+@requires_roles('user')
+def leaderboard():  # put application's code here
+    return render_template('leaderboard.html')
+
+
+@users_blueprint.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))

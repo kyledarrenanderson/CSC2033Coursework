@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return (self.userID)
-    
+
 def createAdmin():
     adminEmail = input("Please Enter the Admins Email Address: ")
     adminFirstName = input("Please Enter the Admins First Name: ")
