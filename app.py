@@ -1,12 +1,27 @@
 from flask import Flask, render_template
-import sql_handler
 
+import databaseinfo
+import sql_handler
+from flask_sqlalchemy import SQLAlchemy
+import urllib
+
+connection_string = (
+    'DRIVER={ODBC Driver 17 for SQL Server};'
+    'SERVER=csc2033-team42-fdmgroup.database.windows.net;'
+    'PORT=1433;'
+    'DATABASE=csc2033_team42FDMGroup;'
+    'USERNAME=csc2033_team42;'
+    'PWD='+databaseinfo.password+';'
+    'charset=utf8mb4;'
+)
+params = urllib.parse.quote_plus(connection_string)
 
 # CONFIG
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'toBeChangedLater'
-
-
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pyodbc:///?odbc_connect=%s" % params
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 @app.route('/')
 def index():  # put application's code here

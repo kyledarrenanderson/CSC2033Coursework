@@ -3,8 +3,10 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 
 
-class User(db.Model, UserMixin):
-    __tablename__ = 'User'
+class User(db.Model):
+    db.Model.metadata.reflect(db.engine)
+    __table__ = db.Model.metadata.tables['User']
+
 
     def __init__(self, email, firstName, lastName, educationLevel, phoneNumber, dateOfBirth, password, role, takenCS):
         self.email = email
