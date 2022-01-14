@@ -1,25 +1,18 @@
 from flask import Flask, render_template
-
+from sqlalchemy import create_engine
 import databaseinfo
 import sql_handler
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, current_user
+
+
 import urllib
-
-connection_string = (
-    'DRIVER={ODBC Driver 17 for SQL Server};'
-    'SERVER=csc2033-team42-fdmgroup.database.windows.net;'
-    'PORT=1433;'
-    'DATABASE=csc2033_team42FDMGroup;'
-    'USERNAME=csc2033_team42;'
-    'PWD='+databaseinfo.password+';'
-    'charset=utf8mb4;'
-)
-params = urllib.parse.quote_plus(connection_string)
-
+params = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};SERVER=csc2033-team42-fdmgroup.database.windows.net;DATABASE=csc2033_team42FDMGroup;UID=csc2033_team42;PWD="+databaseinfo.password)
+engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
 # CONFIG
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'toBeChangedLater'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pyodbc:///?odbc_connect=%s" % params
+app.config['SQLALCHEMY_DATABASE_URI'] = "mssql+pyodbc:///?odbc_connect=%s" % params
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -75,6 +68,18 @@ from admin.views import admin_blueprint
 
 app.register_blueprint(users_blueprint)
 app.register_blueprint(admin_blueprint)
+
+# LOGIN MANAGER
+login_manager = LoginManager()
+login_manager.login_view = 'users.login'
+login_manager.init_app(app)
+
+from models import User
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 if __name__ == '__main__':
     app.run()

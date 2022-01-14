@@ -3,9 +3,9 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     db.Model.metadata.reflect(db.engine)
-    __table__ = db.Model.metadata.tables['User']
+    __table__ = db.Model.metadata.tables['Users']
 
 
     def __init__(self, email, firstName, lastName, educationLevel, phoneNumber, dateOfBirth, password, role, takenCS):
@@ -20,6 +20,9 @@ class User(db.Model):
         self.takenCS = takenCS
         self.phoneNumber = phoneNumber
 
+    def get_id(self):
+        return (self.userID)
+    
 def createAdmin():
     adminEmail = input("Please Enter the Admins Email Address: ")
     adminFirstName = input("Please Enter the Admins First Name: ")
