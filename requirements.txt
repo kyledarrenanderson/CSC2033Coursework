@@ -1,5 +1,6 @@
 Flask
 WTForms
 Werkzeug
-sshtunnel
 pyodbc
+SQLAlchemy
+Flask-SQLAlchemy
