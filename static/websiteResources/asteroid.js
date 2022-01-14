@@ -21,14 +21,21 @@ function game() {
         canvasWidth = context.canvas.width,
         canvasHeight = context.canvas.height;
 
+    let STATE_NOTSTARTED = 0;
+    let STATE_ACTIVE = 1;
+    let STATE_GAMEWIN = 2;
+    let STATE_GAMELOSS = 3;
+
     let asteroidNumber = 5;
     let activeShot = 0;
     let bullets = [];
     let asteroids = [];
     let questions = [];
     let answers = [];
+    let difficulty = "Normal";
+    let asteroidValue = 100;
     let score = 0;
-    let gameActive = false;
+    let game_state = STATE_NOTSTARTED;
     let canvasRect = canvas.getBoundingClientRect();
     let whichButton = 0;
 
@@ -100,14 +107,12 @@ function game() {
         context.fillStyle = "black";
         context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
 
-        let remainder = questions.length;
-        //activeShot = ((activeShot % remainder) + remainder) % remainder;
-
-        context.font = "60px verdana";
-        context.fillStyle = "white";
-        context.textAlign = "center";
-        context.fillText(questions[activeShot][1], canvasWidth/2, canvasHeight - 190 + 170/2);
-
+        if(activeShot != -1) {
+            context.font = "60px verdana";
+            context.fillStyle = "white";
+            context.textAlign = "center";
+            context.fillText(questions[activeShot][1], canvasWidth / 2, canvasHeight - 190 + 170 / 2);
+        }
         /*
         context.font = "60px verdana";
         context.fillStyle = "white";
@@ -117,7 +122,7 @@ function game() {
         context.font = "60px verdana";
         context.fillStyle = "white";
         context.textAlign = "center";
-        context.fillText(questions, canvasWidth/2, canvasHeight - 390 + 170/2);
+        context.fillText(score, 60,60);
         //*/
     }
 
@@ -144,7 +149,7 @@ function game() {
     function clickFunctions(obj) {
         let mousePos = getMousePos(canvas,obj);
 
-        if(gameActive) {
+        if(game_state == STATE_ACTIVE) {
             // if mouse is not in the question box then shoot
             if (mousePos.y < canvasHeight - 190) {
                 _player.rotation = Math.atan2(mousePos.x - _player.x,
@@ -184,16 +189,6 @@ function game() {
     }
 
     /**
-     * Calls all functions that happen every frame.
-     */
-    function gameUpdate() {
-        bulletsUpdate();
-        asteroidsUpdate();
-        player();
-        drawQuestionBox();
-        questionSelect();
-    }
-    /**
      * Manages bullet movements/actions.
      * This cycles through each bullet and updates their
      * position and status. Bullets are removed from the bullet array
@@ -227,7 +222,8 @@ function game() {
      * This cycles through each asteroid and updates their
      * position and status. Asteroids are destroyed when they
      * are hit by the right bullet. Asteroids also end the game
-     * if they reach a distance of 250 from the player.
+     * if they reach a distance of 250 from the player. If the
+     * player clicks the wrong asteroid, the game also ends.
      */
     function asteroidsUpdate() {
         // movement of asteroids
@@ -239,6 +235,11 @@ function game() {
                             bullets[o].hit = true;
                             if(bullets[o].questionID == asteroids[i].answerID) {
                                 asteroids[i].hit = true;
+                                score += asteroidValue;
+                            }
+                            else {
+                                score = Math.max(0, score-=asteroidValue * 2);
+                                game_state = STATE_GAMELOSS;
                             }
                     }
                 }
@@ -257,7 +258,7 @@ function game() {
                 //context.fillText(String(Math.floor(score)), asteroids[i].x, asteroids[i].y);
 
                 if (pointInCircle(asteroids[i].x, asteroids[i].y, _player.x, _player.y, 250)) {
-                    gameActive = false;
+                    game_state = STATE_GAMELOSS;
                 }
                 // Asteroids should reach distance of 250 with player in 90 seconds
                 asteroids[i].x = asteroids[i].x - (500/(120*60)) * Math.cos(asteroids[i].angle);
@@ -265,6 +266,27 @@ function game() {
             }
         }
     }
+
+    /**
+     * Calls all functions that happen every frame.
+     */
+    function gameUpdate() {
+        bulletsUpdate();
+        asteroidsUpdate();
+        player();
+        drawQuestionBox();
+        questionSelect();
+        // end game if all asteroids are destroyed or player misses last asteroid.
+        if(activeShot == -1 && bullets.length == 0) {
+            if(asteroids.length > 0) {
+                game_state = STATE_GAMEWIN;
+            }
+            else {
+                game_state = STATE_GAMELOSS;
+            }
+        }
+    }
+
     // TODO: Game needs to end when player misses a shot!
     // TODO: Need to generate questions+answers based on selected difficulty!
     /**
@@ -273,40 +295,44 @@ function game() {
      * the answer asteroids.
      */
     function preGameSetUp() {
-        // randomise the questions and answers at start of game
+        difficulty = "Normal"
+        switch(difficulty) {
+            case "Easy": asteroidValue = 100;
+            case "Normal": asteroidValue = 200;
+            case "Hard": asteroidValue = 300;
+
+        }
+        // randomise the questions and answers at start of game based on difficulty selected
         let mydata = JSON.parse(data);
         shuffle(mydata);
         let questionID = 0;
         for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
-            if (mydata[i].Difficulty === "Normal") {
+            if (mydata[i].Difficulty === difficulty) {
                 questions.push([questionID,mydata[i].question]);
                 answers.push(mydata[i].answer);
                 questionID++;
             }
         }
-        gameActive = true;
+        game_state = STATE_ACTIVE;
         // randomise the position of the asteroids
         let angleList = [];
         for (let i = 0; i < asteroidNumber; i++) {
             angleList.push(-(Math.PI)/(asteroidNumber-1) * i);
         }
-        //alert(angleList);
         shuffle(angleList);
-        //alert(angleList);
         // create the asteroids.
         for (let i = 0; i < angleList.length; i++) {
             createAsteroid(i, angleList[i]);
         }
-        //alert(asteroids[0].x);
     }
     /**
      * Starts the game.
      */
     function startGame() {
-        if(!gameActive && questions.length === 0) {
+        if(game_state == STATE_NOTSTARTED && questions.length === 0) {
             preGameSetUp();
         }
-        if(gameActive) {
+        if(game_state == STATE_ACTIVE) {
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.beginPath();
             gameUpdate();
