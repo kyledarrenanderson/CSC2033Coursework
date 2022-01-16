@@ -15,11 +15,16 @@
             {% if current_user.is_authenticated and current_user.role=='user'%}
                 <a href="{{ url_for('users.account') }}">Account</a>
             {% endif %}
-            {% if current_user.is_authenticated and current_user.role=='user'%}
-                <a href="{{ url_for('users.learningResources') }}">Learning Resources</a>
-            {% endif %}
+            <div class="dropDownButton">
+                {% if current_user.is_authenticated and current_user.role=='user'%}
+                    <a href="{{ url_for('users.learningResources') }}">Learning Resources</a>
+                        <div class="dropdown-content">
+                            <a href="../static/websiteResources/Asteroid.html">Asteroid Game</a>
+                        </div>
+                {% endif %}
+            </div>
             {% if current_user.is_authenticated and current_user.role=='admin'%}
-                <a href="{{ url_for('admin.admin') }}">Admin</a>
+                <a href="{{ url_for('admin.admin') }}">Security logs</a>
             {% endif %}
             {% if current_user.is_authenticated and current_user.role=='user'%}
                 <a href="{{ url_for('users.leaderboard') }}">Leaderboard</a>

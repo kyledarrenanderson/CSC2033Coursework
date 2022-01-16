@@ -12,11 +12,8 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 @login_required
 @requires_roles('admin')
 def admin():
-    return render_template('admin.html')
+    with open("FDMWebApp.log", "r") as f:
+        content = f.read().splitlines()[-50:]
+        content.reverse()
 
-
-@admin_blueprint.route('/view_all_users', methods=['POST'])
-@login_required
-@requires_roles('admin')
-def view_all_users():
-    return render_template('admin.html', cur_users=User.query.all())
+    return render_template('logPage.html', logs=content)
