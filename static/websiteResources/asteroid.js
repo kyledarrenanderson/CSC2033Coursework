@@ -84,6 +84,18 @@ function game() {
     }
 
     /**
+     * Renders an individual bullet.
+     * @param {int} id - Bullet position in bullet list.
+     */
+    function renderBullet(id) {
+        context.save();
+        context.translate(bullets[id].x,bullets[id].y);
+        context.rotate(bullets[id].angle);
+        context.drawImage(sprite, 65, 0, 96, 32, -16-8, -16, 96, 32);
+        context.restore();
+    }
+
+    /**
      * Represents asteroids containing the answers.
      * @param {int} id - ID of answer asteroid contains.
      * @param {number} angle - Defines the angle of the starting position of asteroid.
@@ -98,6 +110,24 @@ function game() {
             answer : answers[id]
         }
         asteroids.push(asteroid);
+    }
+
+    /**
+     * Renders an individual asteroid.
+     * @param {int} id - Asteroid position in asteroid list.
+     */
+    function renderAsteroid(id) {
+        context.save();
+        context.translate(asteroids[id].x,asteroids[id].y);
+        context.rotate(asteroids[id].angle);
+        context.drawImage(sprite, 288, 0, 192, 192,
+                          -80, -80, 192, 192);
+        context.restore();
+
+        context.font = "60px verdana";
+        context.fillStyle = "black";
+        context.textAlign = "center";
+        context.fillText(answers[id], asteroids[id].x, asteroids[id].y);
     }
 
     /**
@@ -173,18 +203,18 @@ function game() {
      * Handles the glowing animation for the question selection buttons.
      */
     function buttonSelect(obj) {
-        let mousePos = getMousePos(canvas,obj);
+        if (game_state == STATE_ACTIVE) {
+            let mousePos = getMousePos(canvas, obj);
 
-        if(pointInCircle(mousePos.x, mousePos.y
-            , 90, (canvasHeight - 190 + 170/2), 48)) {
-            whichButton = 1;
-        }
-        else if(pointInCircle(mousePos.x, mousePos.y,
-            canvasWidth - 90, (canvasHeight - 190 + 170/2), 48)) {
-            whichButton = 2;
-        }
-        else {
-            whichButton = 0;
+            if (pointInCircle(mousePos.x, mousePos.y
+                , 90, (canvasHeight - 190 + 170 / 2), 48)) {
+                whichButton = 1;
+            } else if (pointInCircle(mousePos.x, mousePos.y,
+                canvasWidth - 90, (canvasHeight - 190 + 170 / 2), 48)) {
+                whichButton = 2;
+            } else {
+                whichButton = 0;
+            }
         }
     }
 
@@ -201,12 +231,8 @@ function game() {
         for (let i = 0;  i < bullets.length; i++) {
             if (!bullets[i].hit && pointInBox(bullets[i].x,bullets[i].y, 0,0,
                 canvasWidth, canvasHeight)) {
-                context.save();
-                context.translate(bullets[i].x,bullets[i].y);
-                context.rotate(bullets[i].angle);
-                context.drawImage(sprite, 65, 0, 96, 32, -16-8, -16, 96, 32);
-                context.restore();
 
+                renderBullet(i);
                 bullets[i].x = bullets[i].x + 15 * Math.cos(bullets[i].angle-Math.PI/2);
                 bullets[i].y = bullets[i].y + 15 * Math.sin(bullets[i].angle-Math.PI/2);
             }
@@ -217,6 +243,7 @@ function game() {
         // bullets that are no longer rendered are deleted from the array
         bullets = tempBullets;
     }
+
     /**
      * Manages asteroid movements/actions.
      * This cycles through each asteroid and updates their
@@ -229,40 +256,30 @@ function game() {
         // movement of asteroids
         for (let i = 0;  i < asteroids.length; i++) {
             if (!asteroids[i].hit) {
+                // check to see if bullets and asteroids collide
                 for (let o = 0;  o < bullets.length; o++) {
-                    if (pointInCircle(bullets[o].x, bullets[o].y,
-                        asteroids[i].x, asteroids[i].y, 86)) {
-                            bullets[o].hit = true;
-                            if(bullets[o].questionID == asteroids[i].answerID) {
-                                asteroids[i].hit = true;
-                                score += asteroidValue;
-                            }
-                            else {
-                                score = Math.max(0, score-=asteroidValue * 2);
-                                game_state = STATE_GAMELOSS;
-                            }
+                    if (pointInCircle(bullets[o].x, bullets[o].y, asteroids[i].x, asteroids[i].y, 86)) {
+                        bullets[o].hit = true;
+                        // check to see if question matches asteroid
+                        if(bullets[o].questionID == asteroids[i].answerID) {
+                            asteroids[i].hit = true;
+                            score += asteroidValue;
+                        }
+                        else {
+                            score = Math.max(0, score-=asteroidValue * 2);
+                            game_state = STATE_GAMELOSS;
+                        }
                     }
                 }
-
-                context.save();
-                context.translate(asteroids[i].x,asteroids[i].y);
-                context.rotate(asteroids[i].angle);
-                context.drawImage(sprite, 288, 0, 192, 192,
-                                  -80, -80, 192, 192);
-                context.restore();
-
-                context.font = "60px verdana";
-                context.fillStyle = "black";
-                context.textAlign = "center";
-                context.fillText(answers[i], asteroids[i].x, asteroids[i].y);
-                //context.fillText(String(Math.floor(score)), asteroids[i].x, asteroids[i].y);
-
+                renderAsteroid(i);
+                // check if asteroid reaches player
                 if (pointInCircle(asteroids[i].x, asteroids[i].y, _player.x, _player.y, 250)) {
                     game_state = STATE_GAMELOSS;
                 }
-                // Asteroids should reach distance of 250 with player in 90 seconds
-                asteroids[i].x = asteroids[i].x - (500/(120*60)) * Math.cos(asteroids[i].angle);
-                asteroids[i].y = asteroids[i].y - (500/(120*60)) * Math.sin(asteroids[i].angle);
+                else {
+                    asteroids[i].x = asteroids[i].x - (500 / (120 * 60)) * Math.cos(asteroids[i].angle);
+                    asteroids[i].y = asteroids[i].y - (500 / (120 * 60)) * Math.sin(asteroids[i].angle);
+                }
             }
         }
     }
@@ -325,17 +342,43 @@ function game() {
             createAsteroid(i, angleList[i]);
         }
     }
+
+    /**
+     * Handles the game over screen!
+     */
+    function endGame() {
+        context.save();
+        context.globalAlpha = 0.75;
+        context.fillStyle = "black";
+        context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        context.globalAlpha = 1;
+        context.font = "150px verdana";
+        context.fillStyle = "white";
+        context.textAlign = "center";
+        context.fillText("GAME OVER!", canvasWidth / 2, 190);
+
+        context.font = "150px verdana";
+        context.fillStyle = "white";
+        context.textAlign = "center";
+        context.fillText("SCORE: " + String(score), canvasWidth / 2, 550);
+        context.restore();
+    }
     /**
      * Starts the game.
      */
     function startGame() {
         if(game_state == STATE_NOTSTARTED && questions.length === 0) {
+            context.clearRect(0, 0, canvasWidth, canvasHeight);
             preGameSetUp();
         }
-        if(game_state == STATE_ACTIVE) {
+        else{
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.beginPath();
             gameUpdate();
+            if (game_state != STATE_ACTIVE) {
+                endGame();
+            }
         }
     }
 

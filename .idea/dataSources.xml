@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="csc2033_team42" uuid="96b9e267-b422-46e9-8960-01bf9583039b">
-      <driver-ref>mariadb</driver-ref>
-      <synchronize>true</synchronize>
-      <remarks>The main database</remarks>
-      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://cs-db.ncl.ac.uk:3306/csc2033_team42</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="@csc2033-team42-fdmgroup.database.windows.net" uuid="106a76ae-1f3b-450f-92f9-6a2850e3da07">
+    <data-source source="LOCAL" name="csc2033_team42FDMGroup@csc2033-team42-fdmgroup.database.windows.net" uuid="106a76ae-1f3b-450f-92f9-6a2850e3da07">
       <driver-ref>azure.ms</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
-      <jdbc-url>jdbc:sqlserver://csc2033-team42-fdmgroup.database.windows.net:1433</jdbc-url>
+      <jdbc-url>jdbc:sqlserver://csc2033-team42-fdmgroup.database.windows.net:1433;database=csc2033_team42FDMGroup</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
