@@ -357,6 +357,11 @@ function game() {
         context.fillStyle = "white";
         context.textAlign = "center";
         context.fillText("GAME OVER!", canvasWidth / 2, 190);
+
+        context.font = "150px verdana";
+        context.fillStyle = "white";
+        context.textAlign = "center";
+        context.fillText("SCORE: " + String(score), canvasWidth / 2, 550);
         context.restore();
     }
     /**
