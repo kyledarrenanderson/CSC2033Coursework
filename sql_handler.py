@@ -38,3 +38,17 @@ def sql_get(statement, fields):
     data = cursor.fetchall()
     db.close()
     return data
+
+
+def sql_addLeaderboardEntry(userID, game, hiScore, lastPlayed):
+    existCheck = sql_get("SELECT * FROM " + game + " WHERE userID = " + str(userID),())
+    if len(existCheck) == 0:
+        try:
+            sql_update("INSERT INTO " + game + " (userID, hiScore, lastPlayed)VALUES (?, ?, ?)",
+                       (userID, hiScore, lastPlayed))
+        except:
+            print("USER ID DOES NOT EXIST!")
+    else:
+        currentHiScore = existCheck[0][1]
+        if hiScore > currentHiScore:
+            sql_update("UPDATE " + game + " SET hiScore = " + str(hiScore) + " WHERE userID = " + str(userID),())
