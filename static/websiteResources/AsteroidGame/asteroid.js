@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", game);
 
 // Load Game Sprites
 const sprite = new Image();
-sprite.src = "/static/websiteResources/asteroid_spritesheet.png";
+sprite.src = "/static/websiteResources/AsteroidGame/asteroid_spritesheet.png";
 
 /**
  * Main logic of the game.
