@@ -3,7 +3,10 @@ html {
     background: #202025;
     width: 100%;
 }
-
+@font-face {
+    font-family: "Franklin Gothic Demi";
+    src: url('/static/websiteResources/FRADM.ttf');
+}
 
 #game {
     width: 1920px;
