@@ -30,7 +30,14 @@ def register():
 
 @users_blueprint.route('/account')
 def account():  # put application's code here
-    return render_template('account.html')
+    return render_template('account.html',
+                           email=current_user.email,
+                           firstName=current_user.firstName,
+                           lastName=current_user.lastName,
+                           phoneNumber=current_user.phoneNumber,
+                           dateOfBirth=current_user.dateOfBirth,
+                           educationLevel=current_user.educationLevel,
+                           takeCS=current_user.takenCS)
 
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
@@ -81,7 +88,6 @@ def learningResources():  # put application's code here
 @requires_roles('user')
 def leaderboard():  # put application's code here
     return render_template('leaderboard.html')
-
 
 @users_blueprint.route("/logout")
 @login_required

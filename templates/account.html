@@ -1,8 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div style="text-align: center; margin-top: 20%;">
-        <h1>CSC2033 Web Application</h1>
-        <h2>Account</h2>
-    </div>
+        <table class="accountPage">
+        <tbody>
+            <tr>
+                <th>Email</th>
+                <th>{{ email }}</th>
+            </tr>
+            <tr>
+                <th>First Name</th>
+                <th>{{ firstName }}</th>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <th>{{ lastName }}</th>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <th>{{ phoneNumber }}</th>
+            </tr>
+            <tr>
+                <th>Date Of Birth</th>
+                <th>{{ dateOfBirth }}</th>
+            </tr>
+            <tr>
+                <th>Education Level</th>
+                <th>{{ educationLevel }}</th>
+            </tr>
+            <tr>
+                <th>Previously Studied Computer Science</th>
+                <th>{{ takeCS }}</th>
+            </tr>
+        </tbody>
+        </table>
 {% endblock %}
