@@ -1,5 +1,6 @@
 const startButton = document.getElementById('start-btn')
 const nextButton = document.getElementById('next-btn')
+const endButton = document.getElementById('end-btn')
 const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const scoreElement = document.getElementById('score')
@@ -27,6 +28,17 @@ function startGame() {
     scoreElement.classList.remove('hide')
     scoreBrdElement.classList.remove('hide')
     setNextQuestion()
+}
+
+function endGame(){
+    console.log('Ended')
+    endContainerElement.classList.remove('hide')
+    questionContainerElement.classList.add('hide')
+    startButton.classList.remove('hide')
+    endButton.classList.add('hide')
+    startButton.innerText = 'Restart'
+    scoreElement.innerHTML = scoreIndex
+    startButton.addEventListener('click', startGame)
 }
 
 function setNextQuestion() {
@@ -70,10 +82,8 @@ function selectAnswer(e) {
     if (shuffledQuestions.length > currentQuestionIndex + 1){
         nextButton.classList.remove('hide')
     } else {
-        startButton.innerText = 'Restart'
-        endContainerElement.classList.remove('hide')
-        questionContainerElement.classList.add('hide')
-        startButton.classList.remove('hide')
+        endButton.classList.remove('hide')
+        endButton.addEventListener('click', endGame)
     }
 }
 
@@ -82,6 +92,8 @@ function checkAnswer(answer,correct){
     if (correct) {
         scoreIndex++
         console.log('3')
+        console.log('score:')
+        console.log(scoreIndex)
     }
 }
 
