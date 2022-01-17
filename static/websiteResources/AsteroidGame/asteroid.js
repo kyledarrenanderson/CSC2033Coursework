@@ -36,7 +36,7 @@ let answers = [];
 let difficulty = "Normal";
 let asteroidValue = 100;
 let score = 0;
-let game_state = STATE_NOTSTARTED;
+let game_state = STATE_ASTEROIDSELECT;
 let canvasRect = canvas.getBoundingClientRect();
 let whichButton = 0;
 
@@ -112,7 +112,7 @@ function renderAsteroid(id) {
     renderSprite(288, 0, 192, 192, -80, -80, 192,
                  192, asteroids[id].x,asteroids[id].y, asteroids[id].angle);
     renderText(asteroids[id].x, asteroids[id].y, answers[id], "60px sans-serif",
-               "black", "center");
+               "black", "center",0);
 
 }
 
@@ -124,7 +124,7 @@ function drawQuestionBox() {
 
     if(activeShot != -1) {
         renderText(canvasWidth / 2, canvasHeight - 190 + 170 / 2, questions[activeShot][1], "60px sans-serif",
-               "white", "center");
+               "white", "center",0);
     }
     /*
     context.font = "60px verdana";
@@ -265,14 +265,20 @@ function asteroidsUpdate() {
     //alert("test");
 }
 
+/**
+ * Handles the very start of the game, including selecting the number of asteroids you
+ * want on screen and displaying the instructions.
+ */
 function asteroidNumberSelection() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.5, "black");
     renderText(canvasWidth / 2, 190, "FDM ASTEROIDS", "150px Franklin Gothic Demi",
-               "white", "center");
+               "white", "center",0);
+    renderText(canvasWidth / 2, 500, "In this game, you must destroy the asteroids\nthat are", "60px sans-serif",
+               "white", "center",60);
 }
 
 /**
- * Handles tasks that need to be done once before the game starts.
+ * Handles tasks that need to be done once before the game truely starts.
  * Includes randomising questions (based on difficulty) and spawning
  * the answer asteroids.
  */
@@ -343,9 +349,9 @@ function gameUpdate() {
 function endGame() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.75, "black");
     renderText(canvasWidth / 2, 190, "GAME OVER!", "150px Franklin Gothic Demi",
-               "white", "center");
+               "white", "center",0);
     renderText(canvasWidth / 2, 550, "SCORE: " + String(score), "150px Franklin Gothic Demi",
-               "white", "center");
+               "white", "center",0);
 }
 /**
  * Starts the game.
@@ -433,12 +439,16 @@ function renderBox(x, y, width, height, alpha, color) {
     context.restore();
 }
 
-function renderText(x, y, text, font, style, alignment) {
+function renderText(x, y, text, font, style, alignment, linespace) {
     context.save();
     context.font = font;
     context.fillStyle = style;
     context.textAlign = alignment;
-    context.fillText(text, x, y);
+    let lines = text.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+        context.fillText(lines[i], x, y + linespace * i);
+    }
+
     context.restore();
 }
 
