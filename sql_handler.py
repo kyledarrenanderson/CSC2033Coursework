@@ -52,3 +52,13 @@ def sql_addLeaderboardEntry(userID, game, hiScore, lastPlayed):
         currentHiScore = existCheck[0][1]
         if hiScore > currentHiScore:
             sql_update("UPDATE " + game + " SET hiScore = " + str(hiScore) + " WHERE userID = " + str(userID),())
+
+
+def sql_calculateOverallScore(userID):
+    asteroidScore = sql_get("SELECT * FROM Asteroids WHERE userID = " + str(userID), ())[0][1]
+    choosePathScore = sql_get("SELECT * FROM ChoosePath WHERE userID = " + str(userID), ())[0][1]
+    hangManScore = sql_get("SELECT * FROM HangMan WHERE userID = " + str(userID), ())[0][1]
+    quizScore = sql_get("SELECT * FROM Quiz WHERE userID = " + str(userID), ())[0][1]
+    overallScore = asteroidScore + choosePathScore + hangManScore + quizScore
+    sql_update("UPDATE Users SET overallScore = " + str(overallScore) + " WHERE userID = " + str(userID) +
+               " AND (overallScore < " + str(overallScore) + " OR overallScore IS NULL)", ())
