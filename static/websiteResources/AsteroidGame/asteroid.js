@@ -21,10 +21,11 @@ const canvas = document.getElementById('game'),
     canvasWidth = context.canvas.width,
     canvasHeight = context.canvas.height;
 
-let STATE_NOTSTARTED = 0;
-let STATE_ACTIVE = 1;
-let STATE_GAMEWIN = 2;
-let STATE_GAMELOSS = 3;
+const STATE_ASTEROIDSELECT = 0;
+const STATE_NOTSTARTED = 1;
+const STATE_ACTIVE = 2;
+const STATE_GAMEWIN = 3;
+const STATE_GAMELOSS = 4;
 
 let asteroidNumber = 5;
 let activeShot = 0;
@@ -35,7 +36,7 @@ let answers = [];
 let difficulty = "Normal";
 let asteroidValue = 100;
 let score = 0;
-let game_state = STATE_NOTSTARTED;
+let game_state = STATE_ASTEROIDSELECT;
 let canvasRect = canvas.getBoundingClientRect();
 let whichButton = 0;
 
@@ -53,16 +54,10 @@ canvas.addEventListener('mousemove', buttonSelect);
  * Represents the player and handles its rendering.
  */
 function player() {
-    context.save();
     // interpolation needs to rotate via shortest angle
-    _player.rotationTrue = interlope(_player.rotationTrue,
-                                    _player.rotation,
-                                    1)
-    context.translate(_player.x, _player.y);
-    context.rotate(_player.rotationTrue);
-    context.drawImage(sprite, 0, 0, 64, 128, -32, -64, 64, 128);
-    context.restore();
-
+    _player.rotationTrue = interlope(_player.rotationTrue, _player.rotation,1);
+    renderSprite(0, 0, 64, 128, -32, -64, 64,
+                 128, _player.x, _player.y, _player.rotationTrue);
 }
 
 /**
@@ -88,11 +83,8 @@ function createBullet(id, bulletAngle) {
  * @param {int} id - Bullet position in bullet list.
  */
 function renderBullet(id) {
-    context.save();
-    context.translate(bullets[id].x,bullets[id].y);
-    context.rotate(bullets[id].angle);
-    context.drawImage(sprite, 65, 0, 96, 32, -16-8, -16, 96, 32);
-    context.restore();
+    renderSprite(65, 0, 96, 32, -16-8, -16, 96,
+                 32, bullets[id].x,bullets[id].y, bullets[id].angle);
 }
 
 /**
@@ -117,35 +109,22 @@ function createAsteroid(id, angle) {
  * @param {int} id - Asteroid position in asteroid list.
  */
 function renderAsteroid(id) {
-    //alert("presave");
-    context.save();
-    //alert("postsave");
-    context.translate(asteroids[id].x,asteroids[id].y);
-    context.rotate(asteroids[id].angle);
-    //alert("presprite");
-    context.drawImage(sprite, 288, 0, 192, 192,
-                      -80, -80, 192, 192);
-    //alert("drawn");
-    context.restore();
+    renderSprite(288, 0, 192, 192, -80, -80, 192,
+                 192, asteroids[id].x,asteroids[id].y, asteroids[id].angle);
+    renderText(asteroids[id].x, asteroids[id].y, answers[id], "60px sans-serif",
+               "black", "center",0);
 
-    context.font = "60px verdana";
-    context.fillStyle = "black";
-    context.textAlign = "center";
-    context.fillText(answers[id], asteroids[id].x, asteroids[id].y);
 }
 
 /**
  * Draws the box that contains the questions and the questions themselves.
  */
 function drawQuestionBox() {
-    context.fillStyle = "black";
-    context.fillRect(20, canvasHeight - 190, canvasWidth - 40, 170);
+    renderBox(20, canvasHeight - 190, canvasWidth - 40, 170, 1, "black");
 
     if(activeShot != -1) {
-        context.font = "60px verdana";
-        context.fillStyle = "white";
-        context.textAlign = "center";
-        context.fillText(questions[activeShot][1], canvasWidth / 2, canvasHeight - 190 + 170 / 2);
+        renderText(canvasWidth / 2, canvasHeight - 190 + 170 / 2, questions[activeShot][1], "60px sans-serif",
+               "white", "center",0);
     }
     /*
     context.font = "60px verdana";
@@ -164,17 +143,10 @@ function drawQuestionBox() {
  * Draws the buttons used to change the selected question.
  */
 function questionSelect() {
-    context.save();
-    context.translate(90, canvasHeight - 190 + 170/2);
-    context.rotate(0);
-    context.drawImage(sprite, 0, [128,320,128][whichButton], 192, 192, -96, -96, 192, 192);
-    context.restore();
-
-    context.save();
-    context.translate(canvasWidth - 90, canvasHeight - 190 + 170/2);
-    context.rotate(Math.PI);
-    context.drawImage(sprite, 0, [128,128,320][whichButton], 192, 192, -96, -96, 192, 192);
-    context.restore();
+    renderSprite(0, [128,320,128][whichButton], 192, 192, -96, -96,
+                 192, 192, 90, canvasHeight - 190 + 170/2, 0);
+    renderSprite(0, [128,128,320][whichButton], 192, 192, -96, -96,
+                 192, 192, canvasWidth - 90, canvasHeight - 190 + 170/2, Math.PI);
 }
 
 /**
@@ -294,38 +266,19 @@ function asteroidsUpdate() {
 }
 
 /**
- * Calls all functions that happen every frame.
+ * Handles the very start of the game, including selecting the number of asteroids you
+ * want on screen and displaying the instructions.
  */
-let test_count = 0;
-function gameUpdate() {
-
-    bulletsUpdate();
-    //alert("1");
-    asteroidsUpdate();
-    //alert("2");
-    player();
-    //alert("3");
-    drawQuestionBox();
-    //alert("4");
-    questionSelect();
-    //alert("5");
-    // end game if all asteroids are destroyed or player misses last asteroid.
-    if(activeShot == -1 && bullets.length == 0) {
-        if(asteroids.length > 0) {
-            game_state = STATE_GAMEWIN;
-        }
-        else {
-            game_state = STATE_GAMELOSS;
-        }
-    }
-
-
+function asteroidNumberSelection() {
+    renderBox(0, 0, canvasWidth, canvasHeight, 0.5, "black");
+    renderText(canvasWidth / 2, 190, "FDM ASTEROIDS", "150px Franklin Gothic Demi",
+               "white", "center",0);
+    renderText(canvasWidth / 2, 500, "In this game, you must destroy the asteroids\nthat are", "60px sans-serif",
+               "white", "center",60);
 }
 
-// TODO: Game needs to end when player misses a shot!
-// TODO: Need to generate questions+answers based on selected difficulty!
 /**
- * Handles tasks that need to be done once before the game starts.
+ * Handles tasks that need to be done once before the game truely starts.
  * Includes randomising questions (based on difficulty) and spawning
  * the answer asteroids.
  */
@@ -363,31 +316,53 @@ function preGameSetUp() {
 }
 
 /**
+ * Calls all functions that happen every frame.
+ */
+function gameUpdate() {
+
+    bulletsUpdate();
+    //alert("1");
+    asteroidsUpdate();
+    //alert("2");
+    player();
+    //alert("3");
+    drawQuestionBox();
+    //alert("4");
+    questionSelect();
+    //alert("5");
+    // end game if all asteroids are destroyed or player misses last asteroid.
+    if(activeShot == -1 && bullets.length == 0) {
+        if(asteroids.length > 0) {
+            game_state = STATE_GAMEWIN;
+        }
+        else {
+            game_state = STATE_GAMELOSS;
+        }
+    }
+
+
+}
+
+/**
  * Handles the game over screen!
  */
 function endGame() {
-    context.save();
-    context.globalAlpha = 0.75;
-    context.fillStyle = "black";
-    context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    context.globalAlpha = 1;
-    context.font = "150px verdana";
-    context.fillStyle = "white";
-    context.textAlign = "center";
-    context.fillText("GAME OVER!", canvasWidth / 2, 190);
-
-    context.font = "150px verdana";
-    context.fillStyle = "white";
-    context.textAlign = "center";
-    context.fillText("SCORE: " + String(score), canvasWidth / 2, 550);
-    context.restore();
+    renderBox(0, 0, canvasWidth, canvasHeight, 0.75, "black");
+    renderText(canvasWidth / 2, 190, "GAME OVER!", "150px Franklin Gothic Demi",
+               "white", "center",0);
+    renderText(canvasWidth / 2, 550, "SCORE: " + String(score), "150px Franklin Gothic Demi",
+               "white", "center",0);
 }
 /**
  * Starts the game.
  */
 function startGame() {
-    if(game_state == STATE_NOTSTARTED && questions.length === 0) {
+    if(game_state == STATE_ASTEROIDSELECT) {
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+        context.beginPath();
+        asteroidNumberSelection();
+    }
+    else if(game_state == STATE_NOTSTARTED && questions.length === 0) {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         preGameSetUp();
     }
@@ -454,4 +429,33 @@ function skipArrayFlag(array2D, startPosition, direction) {
         }
     }
     return -1;
+}
+
+function renderBox(x, y, width, height, alpha, color) {
+    context.save();
+    context.globalAlpha = alpha;
+    context.fillStyle = color;
+    context.fillRect(x, y, width, height);
+    context.restore();
+}
+
+function renderText(x, y, text, font, style, alignment, linespace) {
+    context.save();
+    context.font = font;
+    context.fillStyle = style;
+    context.textAlign = alignment;
+    let lines = text.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+        context.fillText(lines[i], x, y + linespace * i);
+    }
+
+    context.restore();
+}
+
+function renderSprite(sourceX, sourceY, sourceWidth, sourceHeight, renderX, renderY, renderWidth, renderHeight, x, y, rotation) {
+    context.save();
+    context.translate(x, y);
+    context.rotate(rotation);
+    context.drawImage(sprite, sourceX, sourceY, sourceWidth, sourceHeight, renderX, renderY, renderWidth, renderHeight);
+    context.restore();
 }
