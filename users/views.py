@@ -23,13 +23,21 @@ def register():
                   "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                    (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data,
                     generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
+        logging.warning('SECURITY - User registration [%s, %s]', form.email.data, request.remote_addr)
         return redirect(url_for('users.login'))
     return render_template('register.html', form=form)
 
 
 @users_blueprint.route('/account')
 def account():  # put application's code here
-    return render_template('account.html')
+    return render_template('account.html',
+                           email=current_user.email,
+                           firstName=current_user.firstName,
+                           lastName=current_user.lastName,
+                           phoneNumber=current_user.phoneNumber,
+                           dateOfBirth=current_user.dateOfBirth,
+                           educationLevel=current_user.educationLevel,
+                           takeCS=current_user.takenCS)
 
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
@@ -45,7 +53,7 @@ def login():
 
         user = User.query.filter_by(email=form.email.data).first()
         if not user or not check_password_hash(user.password, form.password.data):
-            print("invalid login")
+            logging.warning('SECURITY - Invalid Login Attempt [%s, %s]', form.email.data, request.remote_addr)
             if session['logins'] == 3:
                 flash('Number of incorrect login attempts exceeded')
             elif session['logins'] == 2:
@@ -58,7 +66,7 @@ def login():
 
         session['logins'] = 0
         login_user(user)
-
+        logging.warning('SECURITY - Log in [%s, %s]', current_user.email, request.remote_addr)
         if current_user.role == 'admin':
             return redirect(url_for('admin.admin'))
         else:
@@ -81,9 +89,9 @@ def learningResources():  # put application's code here
 def leaderboard():  # put application's code here
     return render_template('leaderboard.html')
 
-
 @users_blueprint.route("/logout")
 @login_required
 def logout():
+    logging.warning('SECURITY - Log out [%s, %s]', current_user.email, request.remote_addr)
     logout_user()
     return redirect(url_for('index'))

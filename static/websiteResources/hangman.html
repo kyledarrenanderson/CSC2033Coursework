@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap 4 CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <title>Hangman</title>
+
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center">FDM Hangman</h2>
+    <h6 id='wrong-guesses' class="text-center">Wrong Guesses: <span id='mistakes'>0</span> of <span id='maxWrong'></span></h6>
+    <h6 id='your-score' class="text-center">Score: <span id='score'>0</span></h6>
+    <div class="text-center">
+        <button id='timerButton' data-time="120" class="timer__button">Start Timer</button>
+        <h2 id='timer' class="display__time-left"></h2>
+        <img id='hangmanPic' src="./hangmanimages/0.jpg" alt="">
+        <p id='paragraph'>Guess the Programming Language:</p>
+        <p id='definition:' class="text-center">Definition: <span id='definition'></span></p>
+        <p id="wordSpotlight">The word to be guessed goes here</p>
+        <div id="keyboard"></div>
+        <button id='playagain' class="btn btn-info" onClick="playAgain()">Play Again</button>
+    </div>
+</div>
+
+<script src='./hangmanJS.js'></script>
+</body>
+</html>

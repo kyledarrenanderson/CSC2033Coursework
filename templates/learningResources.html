@@ -1,8 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div style="text-align: center; margin-top: 20%;">
-        <h1>CSC2033 Web Application</h1>
-        <h2>Learning Resources</h2>
+    <div class="learningResources">
+        <div class="imageContainer">
+            <img class="image" alt="Software Testing" src="/static/websiteResources/softwareTesting.jpg"/>
+             <div class="overlay">
+                 <ul>
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/Asteroid.html">Asteroid Game</a></li>
+                     {% endif %}
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/hangman.html">Hangman Game</a></li>
+                     {% endif %}
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/Quiz_Main.html">Quiz</a></li>
+                    {% endif %}
+                 </ul>
+             </div>
+            <p>Software Testing</p>
+        </div>
+        <div class="imageContainer">
+            <img class="image" alt="Business Intelligence" src="/static/websiteResources/businessIntelligence.jpg"/>
+             <div class="overlay">
+                 <ul>
+                    {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/Asteroid.html">Asteroid Game</a></li>
+                     {% endif %}
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/hangman.html">Hangman Game</a></li>
+                     {% endif %}
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/Quiz_Main.html">Quiz</a></li>
+                    {% endif %}
+                 </ul>
+             </div>
+            <p>Business Intelligence</p>
+        </div>
+        <div class="imageContainer">
+            <img class="image" alt="Technical Operations" src="/static/websiteResources/technicalOperations.jpg"/>
+             <div class="overlay">
+                 <ul>
+                    {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/Asteroid.html">Asteroid Game</a></li>
+                     {% endif %}
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/hangman.html">Hangman Game</a></li>
+                     {% endif %}
+                     {% if current_user.is_authenticated and current_user.role=='user'%}
+                        <li><a class="links" href="/static/websiteResources/Quiz_Main.html">Quiz</a></li>
+                    {% endif %}
+                 </ul>
+             </div>
+            <p>Technical Operations</p>
+        </div>
     </div>
 {% endblock %}

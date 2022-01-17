@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="adminPageLeft">
+        <div class="logPage">
+            <h1>Security Log</h1>
+            {% for entry in logs %}
+                <tr>
+                    <td>{{ entry }}</td>
+                </tr>
+                <br>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

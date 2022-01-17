@@ -23,8 +23,7 @@ def requires_roles(*roles):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.role not in roles:
-                logging.warning('SECURITY - Unauthorised access attempt [%s, %s, %s, %s]',
-                             current_user.id,
+                logging.warning('SECURITY - Unauthorised access attempt [%s, %s, %s]',
                              current_user.username,
                              current_user.role,
                              request.remote_addr)
@@ -34,6 +33,22 @@ def requires_roles(*roles):
         return wrapped
     return wrapper
 
+
+# LOGGING
+class SecurityFilter(logging.Filter):
+    def filter(self, record):
+        return "SECURITY" in record.getMessage()
+
+
+fh = logging.FileHandler('FDMWebApp.log', 'w')
+fh.setLevel(logging.WARNING)
+fh.addFilter(SecurityFilter())
+formatter = logging.Formatter('%(asctime)s : %(message)s', '%m/%d/%Y %I:%M:%S %p')
+fh.setFormatter(formatter)
+
+logger = logging.getLogger('')
+logger.propagate = False
+logger.addHandler(fh)
 
 @app.route('/')
 def index():  # put application's code here
