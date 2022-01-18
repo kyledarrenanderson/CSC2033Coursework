@@ -33,5 +33,7 @@
             </tr>
         </tbody>
         </table>
-
+        {% if current_user.is_authenticated and current_user.role=='user'%}
+            <a href="{{ url_for('users.accountUpdate') }}" class="updateAccountButton">Update Account</a>
+        {% endif %}
 {% endblock %}

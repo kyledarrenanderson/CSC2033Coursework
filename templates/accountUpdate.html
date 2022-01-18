@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+    <div class="forms">
+        <h1>Update Information</h1>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.firstName(class="inputs", placeholder="First Name") }}
+            {{ form.lastName(class="inputs", placeholder="Last Name") }}
+            {{ form.email(class="inputs", placeholder="Email") }}
+            {% for error in form.email.errors %}
+                {{ error }}
+            {% endfor %}
+            {{ form.phone(class="inputs", placeholder="Phone Number") }}
+            {{ form.password(class="inputs", placeholder="Password") }}
+            {% for error in form.password.errors %}
+                {{ error }}
+            {% endfor %}
+            {{ form.confirmPassword(class="inputs", placeholder="Confirm Password") }}
+            {% for error in form.confirmPassword.errors %}
+                {{ error }}
+            {% endfor %}
+            <p>Highest Education Level</p>
+            {{ form.educationLevel(class="inputs", placeholder="Education Level") }}
+            <p>Have you Previously Studied Computer Science</p>
+            {{ form.studiedCompSci(class="inputs", placeholder="Have you Previously Studied Computer Science") }}
+            {{ form.currentPassword(class="inputs", placeholder="Current Password") }}
+            {% for error in form.password.errors %}
+                {{ error }}
+            {% endfor %}
+            {{ form.submit(class="submitButton") }}
+        </form>
+    </div>
+{% endblock %}

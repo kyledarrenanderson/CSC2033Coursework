@@ -8,7 +8,7 @@ class User(db.Model, UserMixin):
     __table__ = db.Model.metadata.tables['Users']
 
 
-    def __init__(self, email, firstName, lastName, educationLevel, phoneNumber, dateOfBirth, password, role, takenCS):
+    def __init__(self, email, firstName, lastName, educationLevel, phoneNumber, dateOfBirth, password, role, takenCS, overallScore):
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
         self.role = "User"
         self.takenCS = takenCS
         self.phoneNumber = phoneNumber
+        self.overallScore = overallScore
 
     def get_id(self):
         return (self.userID)
