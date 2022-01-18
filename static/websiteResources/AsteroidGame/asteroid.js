@@ -25,21 +25,22 @@ const STATE_ASTEROIDSELECT = 0;
 const STATE_NOTSTARTED = 1;
 const STATE_ACTIVE = 2;
 const STATE_GAMEWIN = 3;
-const STATE_GAMELOSS = 4;
+const STATE_GAMELOSSWRONG = 4;
+const STATE_GAMELOSSMISSED = 5;
+const STATE_GAMELOSSCOLLIDE = 6;
 
-let asteroidNumber = 5;
+let asteroidNumber = 6;
 let activeShot = 0;
 let bullets = [];
 let asteroids = [];
 let questions = [];
 let answers = [];
-let difficulty = "Normal";
-let asteroidValue = 100;
+let correctAnswer = "";
 let score = 0;
-let game_state = STATE_ASTEROIDSELECT;
+let gameState = STATE_ASTEROIDSELECT;
 let canvasRect = canvas.getBoundingClientRect();
 let whichButton = 0;
-
+let countdown = 120*60;
 
 let _player = {
     rotation: 0,
@@ -93,13 +94,20 @@ function renderBullet(id) {
  * @param {number} angle - Defines the angle of the starting position of asteroid.
  */
 function createAsteroid(id, angle) {
+    let value = 0;
+    switch (answers[id][1]) {
+        case "Easy": value = 100; break;
+        case "Normal": value = 200; break;
+        case "Hard": value = 300; break;
+    }
     let asteroid = {
         x : _player.x + 750 * Math.cos(angle),
         y : _player.y + 750 * Math.sin(angle),
         angle : angle,
         hit : false,
         answerID : id,
-        answer : answers[id]
+        answer : answers[id][0],
+        value : value
     }
     asteroids.push(asteroid);
 }
@@ -111,7 +119,7 @@ function createAsteroid(id, angle) {
 function renderAsteroid(id) {
     renderSprite(288, 0, 192, 192, -80, -80, 192,
                  192, asteroids[id].x,asteroids[id].y, asteroids[id].angle);
-    renderText(asteroids[id].x, asteroids[id].y, answers[id], "60px sans-serif",
+    renderText(asteroids[id].x, asteroids[id].y, answers[id][0], "60px sans-serif",
                "black", "center",0);
 
 }
@@ -137,6 +145,7 @@ function drawQuestionBox() {
     context.textAlign = "center";
     context.fillText(score, 60,60);
     //*/
+
 }
 
 /**
@@ -154,8 +163,8 @@ function questionSelect() {
  */
 function clickFunctions(obj) {
     let mousePos = getMousePos(canvas,obj);
-
-    if(game_state == STATE_ACTIVE) {
+    if(gameState == STATE_ASTEROIDSELECT) { gameState = STATE_NOTSTARTED; }
+    if(gameState == STATE_ACTIVE) {
         // if mouse is not in the question box then shoot
         if (mousePos.y < canvasHeight - 190) {
             _player.rotation = Math.atan2(mousePos.x - _player.x,
@@ -179,7 +188,7 @@ function clickFunctions(obj) {
  * Handles the glowing animation for the question selection buttons.
  */
 function buttonSelect(obj) {
-    if (game_state == STATE_ACTIVE) {
+    if (gameState == STATE_ACTIVE) {
         let mousePos = getMousePos(canvas, obj);
 
         if (pointInCircle(mousePos.x, mousePos.y
@@ -241,11 +250,12 @@ function asteroidsUpdate() {
                     // check to see if question matches asteroid
                     if(bullets[o].questionID == asteroids[i].answerID) {
                         asteroids[i].hit = true;
-                        score += asteroidValue;
+                        score += asteroids[i].value;
                     }
                     else {
-                        score = Math.max(0, score-=asteroidValue * 2);
-                        game_state = STATE_GAMELOSS;
+                        score = Math.max(0, score-=asteroids[i].value * 2);
+                        gameState = STATE_GAMELOSSWRONG;
+                        correctAnswer = answers[o][0];
                     }
                 }
             }
@@ -254,7 +264,7 @@ function asteroidsUpdate() {
             //alert("rendered");
             // check if asteroid reaches player
             if (pointInCircle(asteroids[i].x, asteroids[i].y, _player.x, _player.y, 250)) {
-                game_state = STATE_GAMELOSS;
+                gameState = STATE_GAMELOSSCOLLIDE;
             }
             else {
                 asteroids[i].x = asteroids[i].x - (500 / (120 * 60)) * Math.cos(asteroids[i].angle);
@@ -267,14 +277,20 @@ function asteroidsUpdate() {
 
 /**
  * Handles the very start of the game, including selecting the number of asteroids you
- * want on screen and displaying the instructions.
+ * want on screen (if we had time to alter difficulties) and displaying the instructions.
+ * Due to time constrains, game starts upon clicking screen.
  */
 function asteroidNumberSelection() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.5, "black");
     renderText(canvasWidth / 2, 190, "FDM ASTEROIDS", "150px Franklin Gothic Demi",
                "white", "center",0);
-    renderText(canvasWidth / 2, 500, "In this game, you must destroy the asteroids\nthat are", "60px sans-serif",
-               "white", "center",60);
+    renderText(canvasWidth / 2, 300,
+            "In this game, you must destroy the asteroids\n" +
+                "approaching your ship. To destroy them, click\n" +
+                "on the asteroids that provide the right answer\n" +
+                "to the question below. Cycle through each question\n" +
+                "and don't click the wrong answer!\n\n" +
+                "Click anywhere to start!", "60px sans-serif", "white", "center",60);
 }
 
 /**
@@ -283,26 +299,36 @@ function asteroidNumberSelection() {
  * the answer asteroids.
  */
 function preGameSetUp() {
-    difficulty = "Normal"
-    switch(difficulty) {
-        case "Easy": asteroidValue = 100;
-        case "Normal": asteroidValue = 200;
-        case "Hard": asteroidValue = 300;
-
-    }
     // randomise the questions and answers at start of game based on difficulty selected
     let mydata = JSON.parse(data);
     shuffle(mydata);
     let questionID = 0;
+    let easyCount = 0;
+    let normalCount = 0;
+    let hardCount = 0;
     for (let i = 0; i <mydata.length && questions.length < asteroidNumber; i++) {
-        if (mydata[i].Difficulty === difficulty) {
+
+        if (mydata[i].Difficulty === "Easy" && easyCount < 2) {
             questions.push([questionID,mydata[i].question]);
-            answers.push(mydata[i].answer);
+            answers.push([mydata[i].answer,mydata[i].Difficulty]);
             questionID++;
+            easyCount++;
+        }
+        if (mydata[i].Difficulty === "Normal" && normalCount < 2) {
+            questions.push([questionID,mydata[i].question]);
+            answers.push([mydata[i].answer,mydata[i].Difficulty]);
+            questionID++;
+            normalCount++;
+        }
+        if (mydata[i].Difficulty === "Hard" && hardCount < 2) {
+            questions.push([questionID,mydata[i].question]);
+            answers.push([mydata[i].answer,mydata[i].Difficulty]);
+            questionID++;
+            hardCount++;
         }
     }
 
-    game_state = STATE_ACTIVE;
+    gameState = STATE_ACTIVE;
     // randomise the position of the asteroids
     let angleList = [];
     for (let i = 0; i < asteroidNumber; i++) {
@@ -329,14 +355,18 @@ function gameUpdate() {
     drawQuestionBox();
     //alert("4");
     questionSelect();
+    countdown--;
     //alert("5");
     // end game if all asteroids are destroyed or player misses last asteroid.
-    if(activeShot == -1 && bullets.length == 0) {
-        if(asteroids.length > 0) {
-            game_state = STATE_GAMEWIN;
+    if(activeShot == -1 && bullets.length == 0 && gameState == STATE_ACTIVE) {
+        gameState = STATE_GAMEWIN;
+        for (let i = 0;  i < asteroids.length; i++) {
+            if(asteroids[i].hit==false) {
+                gameState = STATE_GAMELOSSMISSED;
+            }
         }
-        else {
-            game_state = STATE_GAMELOSS;
+        if(gameState == STATE_GAMEWIN) {
+            score += Math.round(countdown / 6);
         }
     }
 
@@ -344,25 +374,49 @@ function gameUpdate() {
 }
 
 /**
- * Handles the game over screen!
+ * Handles the game over screen! If the player destroys all asteroids, then
+ * they get bonus score depending on how much time they had left.
  */
 function endGame() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.75, "black");
-    renderText(canvasWidth / 2, 190, "GAME OVER!", "150px Franklin Gothic Demi",
+    if(gameState!=STATE_GAMEWIN) {
+        renderText(canvasWidth / 2, 190, "GAME OVER!", "150px Franklin Gothic Demi",
+                   "white", "center", 0);
+    }
+    switch (gameState) {
+        case STATE_GAMELOSSWRONG :
+            renderText(canvasWidth / 2, 300, "The correct answer was:\n" + correctAnswer, "60px sans-serif",
+            "white", "center", 60);
+            break;
+        case STATE_GAMELOSSCOLLIDE :
+            renderText(canvasWidth / 2, 300, "An asteroid hit!", "60px sans-serif",
+            "white", "center", 60);
+            break;
+        case STATE_GAMELOSSMISSED :
+            renderText(canvasWidth / 2, 300, "You missed shots!", "60px sans-serif",
+            "white", "center", 60);
+            break;
+        case STATE_GAMEWIN:
+            renderText(canvasWidth / 2, 190, "YOU WIN!", "150px Franklin Gothic Demi",
+            "white", "center", 0);
+            break;
+    }
+
+    renderText(canvasWidth / 2, 650, "SCORE: " + String(score), "150px Franklin Gothic Demi",
                "white", "center",0);
-    renderText(canvasWidth / 2, 550, "SCORE: " + String(score), "150px Franklin Gothic Demi",
-               "white", "center",0);
+    renderText(canvasWidth / 2, 900, "Click anywhere to return to website.", "60px sans-serif",
+               "white", "center", 60);
 }
 /**
  * Starts the game.
  */
 function startGame() {
-    if(game_state == STATE_ASTEROIDSELECT) {
+    if(gameState == STATE_ASTEROIDSELECT) {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         context.beginPath();
         asteroidNumberSelection();
     }
-    else if(game_state == STATE_NOTSTARTED && questions.length === 0) {
+    else if(gameState == STATE_NOTSTARTED && questions.length === 0) {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         preGameSetUp();
     }
@@ -370,7 +424,7 @@ function startGame() {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         context.beginPath();
         gameUpdate();
-        if (game_state != STATE_ACTIVE) {
+        if (gameState != STATE_ACTIVE) {
             endGame();
         }
     }
