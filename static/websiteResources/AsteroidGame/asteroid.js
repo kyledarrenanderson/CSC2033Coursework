@@ -467,11 +467,12 @@ function pointInCircle(x, y, cX, cY, cRad) {
 }
 
 /**
+ * Function used to skip questions that have already been fired off when changing questions.
  *
  * @param {2D Array} array2D - Array containing arrays of [flag, value].
  * @param {int} startPosition - Starting index.
  * @param {int} direction - Direction of checking flags.
- * @returns {number} Next available position. -1 If all flags are -1.
+ * @returns {int} Next available position. -1 If all flags are -1.
  */
 function skipArrayFlag(array2D, startPosition, direction) {
     let arraySize = array2D.length;
@@ -485,6 +486,16 @@ function skipArrayFlag(array2D, startPosition, direction) {
     return -1;
 }
 
+/**
+ * Renders a box on the canvas.
+ *
+ * @param {float} x - X position of centre.
+ * @param {float} y - Y position of centre.
+ * @param {float} width - Box Width.
+ * @param {float} height - Box Height.
+ * @param {float} alpha - Box transparency.
+ * @param {color} color - Box colour.
+ */
 function renderBox(x, y, width, height, alpha, color) {
     context.save();
     context.globalAlpha = alpha;
@@ -493,10 +504,21 @@ function renderBox(x, y, width, height, alpha, color) {
     context.restore();
 }
 
-function renderText(x, y, text, font, style, alignment, linespace) {
+/**
+ * Renders text on the canvas.
+ *
+ * @param {float} x - X position.
+ * @param {float} y - Y position.
+ * @param {string} text - Text to display.
+ * @param {font} font - Font face and size.
+ * @param {color} color - Colour of text.
+ * @param {string} alignment - Alignment of text.
+ * @param {float} linespace - Space between each line when line-broken.
+ */
+function renderText(x, y, text, font, color, alignment, linespace) {
     context.save();
     context.font = font;
-    context.fillStyle = style;
+    context.fillStyle = color;
     context.textAlign = alignment;
     let lines = text.split('\n');
     for (let i = 0; i < lines.length; i++) {
@@ -506,6 +528,21 @@ function renderText(x, y, text, font, style, alignment, linespace) {
     context.restore();
 }
 
+/**
+ * Renders a sprite from a sprite sheet.
+ *
+ * @param {int} sourceX - X position of top left rendering co-ordinates.
+ * @param {int} sourceY - Y position of top left rendering co-ordinates.
+ * @param {int} sourceWidth - How wide is the source rectangle.
+ * @param {int} sourceHeight - How tall is the source rectangle.
+ * @param {float} renderX - X position of the centre of sprite.
+ * @param {float} renderY - Y position of the centre of sprite.
+ * @param {float} renderWidth - How wide the sprite renders.
+ * @param {float} renderHeight - How tall the sprite renders.
+ * @param {float} x - Sprite x position.
+ * @param {float} y - Sprite y position.
+ * @param {float} rotation - Sprite rotation.
+ */
 function renderSprite(sourceX, sourceY, sourceWidth, sourceHeight, renderX, renderY, renderWidth, renderHeight, x, y, rotation) {
     context.save();
     context.translate(x, y);
