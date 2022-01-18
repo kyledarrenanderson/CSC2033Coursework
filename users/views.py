@@ -19,8 +19,8 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        sql_update("INSERT INTO Users (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, " 
-                  "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+        sql_update("INSERT INTO Users (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, "
+                   "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                    (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data,
                     generate_password_hash(form.password.data), form.studiedCompSci.data, form.phone.data, "user"))
         logging.warning('SECURITY - User registration [%s, %s]', form.email.data, request.remote_addr)
@@ -42,7 +42,6 @@ def account():  # put application's code here
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
-
     if not session.get('logins'):
         session['logins'] = 0
     elif session.get('logins') >= 3:
@@ -74,7 +73,6 @@ def login():
     return render_template('login.html', form=form)
 
 
-
 @users_blueprint.route('/learningResources')
 @login_required
 @requires_roles('user')
@@ -87,8 +85,97 @@ def learningResources():  # put application's code here
 @requires_roles('user')
 def leaderboard():  # put application's code here
 
-    totalValues = sql_get("SELECT TOP 10 firstName, overallScore FROM Users WHERE role = 'user' ORDER BY overallScore DESC",())
-    return render_template('leaderboard.html', totalScores=totalValues)
+    totalValues = sql_get(
+        "SELECT TOP 10 firstName, overallScore FROM Users WHERE role = 'user' ORDER BY overallScore DESC", ())
+    asteroidsValues = sql_get(
+        "SELECT TOP 10 u.firstName, a.hiScore " +
+        "FROM Users u, Asteroids a " +
+        "WHERE u.userID = a.userID AND NOT u.role = 'admin'" +
+        "ORDER BY a.hiScore DESC"
+        , ())
+    quizValues = sql_get(
+        "SELECT TOP 10 u.firstName, a.hiScore " +
+        "FROM Users u, Quiz a " +
+        "WHERE u.userID = a.userID AND NOT u.role = 'admin'" +
+        "ORDER BY a.hiScore DESC"
+        , ())
+    hangmanValues = sql_get(
+        "SELECT TOP 10 u.firstName, a.hiScore " +
+        "FROM Users u, HangMan a " +
+        "WHERE u.userID = a.userID AND NOT u.role = 'admin'" +
+        "ORDER BY a.hiScore DESC"
+        , ())
+    choosePathValues = sql_get(
+        "SELECT TOP 10 u.firstName, a.hiScore " +
+        "FROM Users u, ChoosePath a " +
+        "WHERE u.userID = a.userID AND NOT u.role = 'admin'" +
+        "ORDER BY a.hiScore DESC"
+        , ())
+    return render_template('leaderboard.html', totalScores=totalValues, asteroidsScores=asteroidsValues,
+                           quizScores=quizValues, hangmanScores=hangmanValues, choosePathScores=choosePathValues)
+
+
+@users_blueprint.route('/asteroidsSoftwareTesting')
+@login_required
+@requires_roles('user')
+def asteroidsSoftwareTesting():
+    return render_template('asteroidsSoftwareTesting.html')
+
+
+@users_blueprint.route('/asteroidsBusinessIntelligence')
+@login_required
+@requires_roles('user')
+def asteroidsBusinessIntelligence():
+    return render_template('asteroidsBusinessIntelligence.html')
+
+
+@users_blueprint.route('/asteroidsTechnicalOperations')
+@login_required
+@requires_roles('user')
+def asteroidsTechnicalOperations():
+    return render_template('asteroidsTechnicalOperations.html')
+
+
+@users_blueprint.route('/hangmanSoftwareTesting')
+@login_required
+@requires_roles('user')
+def hangmanSoftwareTesting():
+    return render_template('hangmanSoftwareTesting.html')
+
+
+@users_blueprint.route('/hangmanBusinessIntelligence')
+@login_required
+@requires_roles('user')
+def hangmanBusinessIntelligence():
+    return render_template('hangmanBusinessIntelligence.html')
+
+
+@users_blueprint.route('/hangmanTechnicalOperations')
+@login_required
+@requires_roles('user')
+def hangmanTechnicalOperations():
+    return render_template('hangmanTechnicalOperations.html')
+
+
+@users_blueprint.route('/quizSoftwareTesting')
+@login_required
+@requires_roles('user')
+def quizSoftwareTesting():
+    return render_template('quizSoftwareTesting.html')
+
+
+@users_blueprint.route('/quizBusinessIntelligence')
+@login_required
+@requires_roles('user')
+def quizBusinessIntelligence():
+    return render_template('quizBusinessIntelligence.html')
+
+
+@users_blueprint.route('/quizTechnicalOperations')
+@login_required
+@requires_roles('user')
+def quizTechnicalOperations():
+    return render_template('quizTechnicalOperations.html')
 
 
 @users_blueprint.route('/accountUpdate', methods=['GET', 'POST'])
@@ -98,22 +185,27 @@ def accountUpdate():
     form = UpdateInfoForm()
     if form.validate_on_submit():
         if form.email.data:
-            sql_update("INSERT INTO Users (email)VALUES(?) WHERE (userID)"+str(current_user.userID), form.email.data)
+            sql_update("INSERT INTO Users (email)VALUES(?) WHERE (userID)" + str(current_user.userID), form.email.data)
         if form.firstName.data:
-            sql_update("INSERT INTO Users (firstName)VALUES(?) WHERE (userID)"+str(current_user.userID), form.firstName.data)
+            sql_update("INSERT INTO Users (firstName)VALUES(?) WHERE (userID)" + str(current_user.userID),
+                       form.firstName.data)
         if form.lastName.data:
-            sql_update("INSERT INTO Users (lastName)VALUES(?) WHERE (userID)"+str(current_user.userID), form.lastName.data)
+            sql_update("INSERT INTO Users (lastName)VALUES(?) WHERE (userID)" + str(current_user.userID),
+                       form.lastName.data)
         if form.phone.data:
-            sql_update("INSERT INTO Users (phoneNumber)VALUES(?) WHERE (userID)"+str(current_user.userID), form.phone.data)
+            sql_update("INSERT INTO Users (phoneNumber)VALUES(?) WHERE (userID)" + str(current_user.userID),
+                       form.phone.data)
         if form.password.data:
-            sql_update("INSERT INTO Users (password)VALUES(?) WHERE (userID)"+str(current_user.userID), generate_password_hash(form.password.data))
+            sql_update("INSERT INTO Users (password)VALUES(?) WHERE (userID)" + str(current_user.userID),
+                       generate_password_hash(form.password.data))
         if form.educationLevel.data:
-            sql_update("INSERT INTO Users (educationLevel)VALUES(?) WHERE (userID)"+str(current_user.userID), form.educationLevel.data)
+            sql_update("INSERT INTO Users (educationLevel)VALUES(?) WHERE (userID)" + str(current_user.userID),
+                       form.educationLevel.data)
         if form.studiedCompSci.data:
-            sql_update("INSERT INTO Users (takenCS)VALUES(?) WHERE (userID)"+str(current_user.userID), form.studiedCompSci.data)
+            sql_update("INSERT INTO Users (takenCS)VALUES(?) WHERE (userID)" + str(current_user.userID),
+                       form.studiedCompSci.data)
         return redirect(url_for('users.account'))
     return render_template("accountUpdate.html", form=form)
-
 
 
 @users_blueprint.route("/logout")

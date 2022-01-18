@@ -1,16 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="leaderboard">
-            <h1>Leaderboard</h1>
-
-                {% for score in totalScores %}
-                    <tr>
-                        <td>{{ score.firstName }}</td>
-                        <td>{{ score.overallScore }}</td>
-                    </tr>
-                    <br>
-                {% endfor %}
-            </div>
-        </div>
+    <div class="mainLeaderboard">
+        <h1>Leaderboard</h1>
+        {% for score in totalScores %}
+            <tr>
+                <td>{{ score.firstName }}</td>
+                <td>{{ score.overallScore }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </div>
+    <div class="individualLeaderboard">
+        <h1>Asteroids</h1>
+        {% for score in asteroidsScores %}
+            <tr>
+                <td>{{ score.firstName }}</td>
+                <td>{{ score.hiScore }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </div>
+    <div class="individualLeaderboard">
+        <h1>Quiz</h1>
+        {% for score in quizScores %}
+            <tr>
+                <td>{{ score.firstName }}</td>
+                <td>{{ score.hiScore }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </div>
+    <div class="individualLeaderboard">
+        <h1>Hangman</h1>
+        {% for score in hangmanScores %}
+            <tr>
+                <td>{{ score.firstName }}</td>
+                <td>{{ score.hiScore }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </div>
+    <div class="individualLeaderboard">
+        <h1>Choose Path Game</h1>
+        {% for score in choosePathScores %}
+            <tr>
+                <td>{{ score.firstName }}</td>
+                <td>{{ score.hiScore }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </div>
 {% endblock %}

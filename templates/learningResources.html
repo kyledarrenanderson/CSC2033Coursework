@@ -7,13 +7,13 @@
              <div class="overlay">
                  <ul>
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/asteroids.html">Asteroid Game</a></li>
+                        <li><a class="links" href={{ url_for('users.asteroidsSoftwareTesting') }}>Asteroid Game</a></li>
                      {% endif %}
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/hangman.html">Hangman Game</a></li>
+                        <li><a class="links" href={{ url_for('users.hangmanSoftwareTesting') }}>Hangman Game</a></li>
                      {% endif %}
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/quiz.html">Quiz</a></li>
+                        <li><a class="links" href={{ url_for('users.quizSoftwareTesting') }}>Quiz</a></li>
                     {% endif %}
                  </ul>
              </div>
@@ -24,13 +24,13 @@
              <div class="overlay">
                  <ul>
                     {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/asteroids.html">Asteroid Game</a></li>
+                        <li><a class="links" href={{ url_for('users.asteroidsBusinessIntelligence') }}>Asteroid Game</a></li>
                      {% endif %}
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/hangman.html">Hangman Game</a></li>
+                        <li><a class="links" href={{ url_for('users.hangmanBusinessIntelligence') }}>Hangman Game</a></li>
                      {% endif %}
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/quiz.html">Quiz</a></li>
+                        <li><a class="links" href={{ url_for('users.quizBusinessIntelligence') }}>Quiz</a></li>
                     {% endif %}
                  </ul>
              </div>
@@ -41,13 +41,13 @@
              <div class="overlay">
                  <ul>
                     {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/asteroids.html">Asteroid Game</a></li>
+                        <li><a class="links" href={{ url_for('users.asteroidsTechnicalOperations') }}>Asteroid Game</a></li>
                      {% endif %}
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/hangman.html">Hangman Game</a></li>
+                        <li><a class="links" href={{ url_for('users.hangmanTechnicalOperations') }}>Hangman Game</a></li>
                      {% endif %}
                      {% if current_user.is_authenticated and current_user.role=='user'%}
-                        <li><a class="links" href="/templates/quiz.html">Quiz</a></li>
+                        <li><a class="links" href={{ url_for('users.quizTechnicalOperations') }}>Quiz</a></li>
                     {% endif %}
                  </ul>
              </div>

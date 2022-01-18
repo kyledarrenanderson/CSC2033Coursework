@@ -238,21 +238,29 @@
     cursor: pointer;
 }
 
-.leaderboard {
+.mainLeaderboard {
     font-family: SansSerif, sans-serif;
     background-color: #202025;
     color: white;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 10%;
+    margin-top: 5%;
     width: 60%;
-    height: 40%;
     border: 5px solid #00afaf;
     border-radius: 25px;
     text-align: center;
 }
 
-.leaderboardText {
-    padding: 3px;
-    border: 1px solid white;
+.individualLeaderboard {
+    font-family: SansSerif, sans-serif;
+    background-color: #202025;
+    color: white;
+    margin-left: 3.5%;
+    margin-right: auto;
+    margin-top: 1%;
+    width: 20%;
+    border: 5px solid #00afaf;
+    border-radius: 25px;
+    text-align: center;
+    display: inline-block;
 }
