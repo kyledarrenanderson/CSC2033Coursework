@@ -119,8 +119,9 @@ function createAsteroid(id, angle) {
 function renderAsteroid(id) {
     renderSprite(288, 0, 192, 192, -80, -80, 192,
                  192, asteroids[id].x,asteroids[id].y, asteroids[id].angle);
-    renderText(asteroids[id].x, asteroids[id].y, answers[id][0], "60px sans-serif",
-               "black", "center",0, '\n');
+    let reposition = answers[id][0].split(" ").length;
+    renderText(asteroids[id].x, asteroids[id].y-15*reposition+15, answers[id][0], "40px sans-serif",
+               "black", "center", 40, ' ', true);
 
 }
 
@@ -283,7 +284,7 @@ function asteroidsUpdate() {
 function asteroidNumberSelection() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.5, "black");
     renderText(canvasWidth / 2, 190, "FDM ASTEROIDS", "150px Franklin Gothic Demi",
-               "white", "center",0, '\n');
+               "white");
     renderText(canvasWidth / 2, 300,
             "In this game, you must destroy the asteroids\n" +
                 "approaching your ship. To destroy them, click\n" +
@@ -381,29 +382,29 @@ function endGame() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.75, "black");
     if(gameState!=STATE_GAMEWIN) {
         renderText(canvasWidth / 2, 190, "GAME OVER!", "150px Franklin Gothic Demi",
-                   "white", "center", 0, '\n');
+                   "white");
     }
     switch (gameState) {
         case STATE_GAMELOSSWRONG :
             renderText(canvasWidth / 2, 300, "The correct answer was:\n" + correctAnswer, "60px sans-serif",
-            "white", "center", 60, '\n');
+            "white");
             break;
         case STATE_GAMELOSSCOLLIDE :
             renderText(canvasWidth / 2, 300, "An asteroid hit!", "60px sans-serif",
-            "white", "center", 60, '\n');
+            "white");
             break;
         case STATE_GAMELOSSMISSED :
             renderText(canvasWidth / 2, 300, "You missed shots!", "60px sans-serif",
-            "white", "center", 60, '\n');
+            "white");
             break;
         case STATE_GAMEWIN:
             renderText(canvasWidth / 2, 190, "YOU WIN!", "150px Franklin Gothic Demi",
-            "white", "center", 0, '\n');
+            "white");
             break;
     }
 
     renderText(canvasWidth / 2, 650, "SCORE: " + String(score), "150px Franklin Gothic Demi",
-               "white", "center",0, '\n');
+               "white");
     renderText(canvasWidth / 2, 900, "Click anywhere to return to website.", "60px sans-serif",
                "white", "center", 60, '\n');
 }
@@ -516,12 +517,19 @@ function renderBox(x, y, width, height, alpha, color) {
  * @param {number} linespace - Space between each line when line-broken.
  * @param {string} splitter - Line break identifier.
  */
-function renderText(x, y, text, font, color, alignment, linespace, splitter) {
+function renderText(x, y, text, font, color, alignment = "center", linespace = "0", splitter= "\n", outline = false) {
     context.save();
     context.font = font;
     context.fillStyle = color;
     context.textAlign = alignment;
     let lines = text.split(splitter);
+    if(outline == true) {
+        context.lineWidth = 7;
+        context.strokeStyle = "white";
+        for (let i = 0; i < lines.length; i++) {
+            context.strokeText(lines[i], x, y + linespace * i);
+        }
+    }
     for (let i = 0; i < lines.length; i++) {
         context.fillText(lines[i], x, y + linespace * i);
     }
