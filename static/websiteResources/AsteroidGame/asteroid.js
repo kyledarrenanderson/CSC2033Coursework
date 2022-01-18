@@ -1,6 +1,4 @@
 
-window.addEventListener("DOMContentLoaded", game);
-
 // Load Game Sprites
 const sprite = new Image();
 sprite.src = "/static/websiteResources/AsteroidGame/asteroid_spritesheet.png";
@@ -132,8 +130,8 @@ function drawQuestionBox() {
     renderBox(20, canvasHeight - 190, canvasWidth - 40, 170, 1, "black");
 
     if(activeShot != -1) {
-        renderText(canvasWidth / 2, canvasHeight - 195 + 170 / 2, questions[activeShot][1], "40px sans-serif",
-               "white", "center",40, '|');
+        renderText(canvasWidth / 2, canvasHeight - 195 + 170 / 2, questions[activeShot][1],
+            "40px sans-serif", "white", "center",40, '|');
     }
     /*
     context.font = "60px verdana";
@@ -161,6 +159,8 @@ function questionSelect() {
 
 /**
  * Handles actions done by the player clicking.
+ *
+ * @param {event} obj - Event from listener.
  */
 function clickFunctions(obj) {
     let mousePos = getMousePos(canvas,obj);
@@ -187,6 +187,8 @@ function clickFunctions(obj) {
 }
 /**
  * Handles the glowing animation for the question selection buttons.
+ *
+ * @param {event} obj - Event from listener.
  */
 function buttonSelect(obj) {
     if (gameState == STATE_ACTIVE) {
@@ -291,7 +293,8 @@ function asteroidNumberSelection() {
                 "on the asteroids that provide the right answer\n" +
                 "to the question below. Cycle through each question\n" +
                 "and don't click the wrong answer!\n\n" +
-                "Click anywhere to start!", "60px sans-serif", "white", "center",60, '\n');
+                "Click anywhere to start!", "60px sans-serif", "white", "center",
+                60, '\n');
 }
 
 /**
@@ -386,8 +389,8 @@ function endGame() {
     }
     switch (gameState) {
         case STATE_GAMELOSSWRONG :
-            renderText(canvasWidth / 2, 300, "The correct answer was:\n" + correctAnswer, "60px sans-serif",
-            "white", "center", 60);
+            renderText(canvasWidth / 2, 300, "The correct answer was:\n" + correctAnswer,
+                "60px sans-serif", "white", "center", 60);
             break;
         case STATE_GAMELOSSCOLLIDE :
             renderText(canvasWidth / 2, 300, "An asteroid hit!", "60px sans-serif",
@@ -516,8 +519,10 @@ function renderBox(x, y, width, height, alpha, color) {
  * @param {string} alignment - Alignment of text.
  * @param {number} linespace - Space between each line when line-broken.
  * @param {string} splitter - Line break identifier.
+ * @param {boolean} outline - Text has outline. Only used for asteroids.
  */
-function renderText(x, y, text, font, color, alignment = "center", linespace = "0", splitter= '\n', outline = false) {
+function renderText(x, y, text, font, color, alignment = "center",
+                    linespace = "0", splitter= '\n', outline = false) {
     context.save();
     context.font = font;
     context.fillStyle = color;
@@ -552,10 +557,12 @@ function renderText(x, y, text, font, color, alignment = "center", linespace = "
  * @param {float} y - Sprite y position.
  * @param {float} rotation - Sprite rotation.
  */
-function renderSprite(sourceX, sourceY, sourceWidth, sourceHeight, renderX, renderY, renderWidth, renderHeight, x, y, rotation) {
+function renderSprite(sourceX, sourceY, sourceWidth, sourceHeight, renderX,
+                      renderY, renderWidth, renderHeight, x, y, rotation) {
     context.save();
     context.translate(x, y);
     context.rotate(rotation);
-    context.drawImage(sprite, sourceX, sourceY, sourceWidth, sourceHeight, renderX, renderY, renderWidth, renderHeight);
+    context.drawImage(sprite, sourceX, sourceY, sourceWidth, sourceHeight, renderX, renderY,
+                      renderWidth, renderHeight);
     context.restore();
 }
