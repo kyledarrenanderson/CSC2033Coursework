@@ -387,7 +387,7 @@ function endGame() {
     switch (gameState) {
         case STATE_GAMELOSSWRONG :
             renderText(canvasWidth / 2, 300, "The correct answer was:\n" + correctAnswer, "60px sans-serif",
-            "white");
+            "white", "center", 60);
             break;
         case STATE_GAMELOSSCOLLIDE :
             renderText(canvasWidth / 2, 300, "An asteroid hit!", "60px sans-serif",
@@ -517,7 +517,7 @@ function renderBox(x, y, width, height, alpha, color) {
  * @param {number} linespace - Space between each line when line-broken.
  * @param {string} splitter - Line break identifier.
  */
-function renderText(x, y, text, font, color, alignment = "center", linespace = "0", splitter= "\n", outline = false) {
+function renderText(x, y, text, font, color, alignment = "center", linespace = "0", splitter= '\n', outline = false) {
     context.save();
     context.font = font;
     context.fillStyle = color;

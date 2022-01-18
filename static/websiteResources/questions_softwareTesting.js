@@ -1,5 +1,5 @@
 data =
-    '[{"Difficulty" : "Easy", "question" : "What is the first phase of|Software Testing Life Cycle(STLC)?-", "answer" : "Requirement Analysis"},' +
+    '[{"Difficulty" : "Easy", "question" : "What is the first phase of|Software Testing Life Cycle(STLC)?", "answer" : "Requirement Analysis"},' +
     '{"Difficulty" : "Easy", "question" : "Which type of software testing can be done|without programming knowledge? ", "answer" : "Manual Testing"},' +
     '{"Difficulty" : "Easy", "question" : "What is followed on first stage in automation testing? ", "answer" : "Test Tool Selection"},' +
     '{"Difficulty" : "Easy", "question" : "What acceptance test is based on?", "answer" : "User Requirements"},' +
