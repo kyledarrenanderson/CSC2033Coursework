@@ -120,7 +120,7 @@ function renderAsteroid(id) {
     renderSprite(288, 0, 192, 192, -80, -80, 192,
                  192, asteroids[id].x,asteroids[id].y, asteroids[id].angle);
     renderText(asteroids[id].x, asteroids[id].y, answers[id][0], "60px sans-serif",
-               "black", "center",0);
+               "black", "center",0, '\n');
 
 }
 
@@ -131,8 +131,8 @@ function drawQuestionBox() {
     renderBox(20, canvasHeight - 190, canvasWidth - 40, 170, 1, "black");
 
     if(activeShot != -1) {
-        renderText(canvasWidth / 2, canvasHeight - 190 + 170 / 2, questions[activeShot][1], "60px sans-serif",
-               "white", "center",0);
+        renderText(canvasWidth / 2, canvasHeight - 195 + 170 / 2, questions[activeShot][1], "40px sans-serif",
+               "white", "center",40, '|');
     }
     /*
     context.font = "60px verdana";
@@ -283,14 +283,14 @@ function asteroidsUpdate() {
 function asteroidNumberSelection() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.5, "black");
     renderText(canvasWidth / 2, 190, "FDM ASTEROIDS", "150px Franklin Gothic Demi",
-               "white", "center",0);
+               "white", "center",0, '\n');
     renderText(canvasWidth / 2, 300,
             "In this game, you must destroy the asteroids\n" +
                 "approaching your ship. To destroy them, click\n" +
                 "on the asteroids that provide the right answer\n" +
                 "to the question below. Cycle through each question\n" +
                 "and don't click the wrong answer!\n\n" +
-                "Click anywhere to start!", "60px sans-serif", "white", "center",60);
+                "Click anywhere to start!", "60px sans-serif", "white", "center",60, '\n');
 }
 
 /**
@@ -381,31 +381,31 @@ function endGame() {
     renderBox(0, 0, canvasWidth, canvasHeight, 0.75, "black");
     if(gameState!=STATE_GAMEWIN) {
         renderText(canvasWidth / 2, 190, "GAME OVER!", "150px Franklin Gothic Demi",
-                   "white", "center", 0);
+                   "white", "center", 0, '\n');
     }
     switch (gameState) {
         case STATE_GAMELOSSWRONG :
             renderText(canvasWidth / 2, 300, "The correct answer was:\n" + correctAnswer, "60px sans-serif",
-            "white", "center", 60);
+            "white", "center", 60, '\n');
             break;
         case STATE_GAMELOSSCOLLIDE :
             renderText(canvasWidth / 2, 300, "An asteroid hit!", "60px sans-serif",
-            "white", "center", 60);
+            "white", "center", 60, '\n');
             break;
         case STATE_GAMELOSSMISSED :
             renderText(canvasWidth / 2, 300, "You missed shots!", "60px sans-serif",
-            "white", "center", 60);
+            "white", "center", 60, '\n');
             break;
         case STATE_GAMEWIN:
             renderText(canvasWidth / 2, 190, "YOU WIN!", "150px Franklin Gothic Demi",
-            "white", "center", 0);
+            "white", "center", 0, '\n');
             break;
     }
 
     renderText(canvasWidth / 2, 650, "SCORE: " + String(score), "150px Franklin Gothic Demi",
-               "white", "center",0);
+               "white", "center",0, '\n');
     renderText(canvasWidth / 2, 900, "Click anywhere to return to website.", "60px sans-serif",
-               "white", "center", 60);
+               "white", "center", 60, '\n');
 }
 /**
  * Starts the game.
@@ -489,12 +489,12 @@ function skipArrayFlag(array2D, startPosition, direction) {
 /**
  * Renders a box on the canvas.
  *
- * @param {float} x - X position of centre.
- * @param {float} y - Y position of centre.
- * @param {float} width - Box Width.
- * @param {float} height - Box Height.
- * @param {float} alpha - Box transparency.
- * @param {color} color - Box colour.
+ * @param {number} x - X position of centre.
+ * @param {number} y - Y position of centre.
+ * @param {number} width - Box Width.
+ * @param {number} height - Box Height.
+ * @param {number} alpha - Box transparency.
+ * @param {string} color - Box colour.
  */
 function renderBox(x, y, width, height, alpha, color) {
     context.save();
@@ -507,20 +507,21 @@ function renderBox(x, y, width, height, alpha, color) {
 /**
  * Renders text on the canvas.
  *
- * @param {float} x - X position.
- * @param {float} y - Y position.
+ * @param {number} x - X position.
+ * @param {number} y - Y position.
  * @param {string} text - Text to display.
- * @param {font} font - Font face and size.
- * @param {color} color - Colour of text.
+ * @param {string} font - Font face and size.
+ * @param {string} color - Colour of text.
  * @param {string} alignment - Alignment of text.
- * @param {float} linespace - Space between each line when line-broken.
+ * @param {number} linespace - Space between each line when line-broken.
+ * @param {string} splitter - Line break identifier.
  */
-function renderText(x, y, text, font, color, alignment, linespace) {
+function renderText(x, y, text, font, color, alignment, linespace, splitter) {
     context.save();
     context.font = font;
     context.fillStyle = color;
     context.textAlign = alignment;
-    let lines = text.split('\n');
+    let lines = text.split(splitter);
     for (let i = 0; i < lines.length; i++) {
         context.fillText(lines[i], x, y + linespace * i);
     }
@@ -535,10 +536,10 @@ function renderText(x, y, text, font, color, alignment, linespace) {
  * @param {int} sourceY - Y position of top left rendering co-ordinates.
  * @param {int} sourceWidth - How wide is the source rectangle.
  * @param {int} sourceHeight - How tall is the source rectangle.
- * @param {float} renderX - X position of the centre of sprite.
- * @param {float} renderY - Y position of the centre of sprite.
- * @param {float} renderWidth - How wide the sprite renders.
- * @param {float} renderHeight - How tall the sprite renders.
+ * @param {number} renderX - X position of the centre of sprite.
+ * @param {number} renderY - Y position of the centre of sprite.
+ * @param {number} renderWidth - How wide the sprite renders.
+ * @param {number} renderHeight - How tall the sprite renders.
  * @param {float} x - Sprite x position.
  * @param {float} y - Sprite y position.
  * @param {float} rotation - Sprite rotation.
