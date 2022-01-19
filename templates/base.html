@@ -10,6 +10,7 @@
 <body>
 
     <div class="navbar">
+        <img src="../static/websiteResources/FDMWhiteLogo.png" alt="FDM LOGO" class="navbarImage">
         <a href="{{ url_for('index') }}">Home</a>
         {% if current_user.is_authenticated and current_user.role=='user'%}
             <a href="{{ url_for('users.account') }}">Account</a>

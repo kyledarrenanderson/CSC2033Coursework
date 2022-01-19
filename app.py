@@ -1,14 +1,23 @@
+import logging
+import urllib
+from functools import wraps
 from flask import Flask, render_template, request
+from flask_login import LoginManager, current_user
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import databaseinfo
-import sql_handler
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user
-import logging
-from functools import wraps
 
-import urllib
-params = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};SERVER=csc2033-team42-fdmgroup.database.windows.net;DATABASE=csc2033_team42FDMGroup;UID=csc2033_team42;PWD="+databaseinfo.password)
+
+"""
+ * @author Kyle Anderson
+ * @version 1
+ * @since 26-11-2021
+"""
+
+
+params = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL "
+                                 "Server};SERVER=csc2033-team42-fdmgroup.database.windows.net;DATABASE"
+                                 "=csc2033_team42FDMGroup;UID=csc2033_team42;PWD=" + databaseinfo.password)
 engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
 # CONFIG
 app = Flask(__name__)
@@ -18,19 +27,23 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
+# REQUIRES ROLES LOGIC
 def requires_roles(*roles):
     def wrapper(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.role not in roles:
+                # Logs access attempt into the log file
                 logging.warning('SECURITY - Unauthorised access attempt [%s, %s, %s]',
-                             current_user.username,
-                             current_user.role,
-                             request.remote_addr)
+                                current_user.username,
+                                current_user.role,
+                                request.remote_addr)
                 # Redirect the user to an unauthorised notice!
                 return render_template('403.html')
             return f(*args, **kwargs)
+
         return wrapped
+
     return wrapper
 
 
@@ -40,6 +53,7 @@ class SecurityFilter(logging.Filter):
         return "SECURITY" in record.getMessage()
 
 
+# Setup for the logging handler
 fh = logging.FileHandler('FDMWebApp.log', 'w')
 fh.setLevel(logging.WARNING)
 fh.addFilter(SecurityFilter())
@@ -50,13 +64,16 @@ logger = logging.getLogger('')
 logger.propagate = False
 logger.addHandler(fh)
 
+
+# HOMEPAGE
 @app.route('/')
-def index():  # put application's code here
+def index():
     return render_template('index.html')
 
 
+# ABOUT US PAGE
 @app.route('/aboutUs')
-def aboutUs():  # put application's code here
+def aboutUs():
     return render_template('aboutUs.html')
 
 
@@ -104,6 +121,7 @@ from models import User
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 if __name__ == '__main__':
     app.run()

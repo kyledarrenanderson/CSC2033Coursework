@@ -26,6 +26,7 @@ const STATE_GAMEWIN = 3;
 const STATE_GAMELOSSWRONG = 4;
 const STATE_GAMELOSSMISSED = 5;
 const STATE_GAMELOSSCOLLIDE = 6;
+const STATE_END = 7;
 
 let asteroidNumber = 6;
 let activeShot = 0;
@@ -165,7 +166,7 @@ function questionSelect() {
 function clickFunctions(obj) {
     let mousePos = getMousePos(canvas,obj);
     if(gameState == STATE_ASTEROIDSELECT) { gameState = STATE_NOTSTARTED; }
-    if(gameState == STATE_ACTIVE) {
+    else if(gameState == STATE_ACTIVE) {
         // if mouse is not in the question box then shoot
         if (mousePos.y < canvasHeight - 190) {
             _player.rotation = Math.atan2(mousePos.x - _player.x,
@@ -183,6 +184,9 @@ function clickFunctions(obj) {
             }
 
         }
+    }
+    else if (gameState != STATE_END){
+        gameState = STATE_END;
     }
 }
 /**
@@ -424,7 +428,7 @@ function startGame() {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         preGameSetUp();
     }
-    else{
+    else if(gameState != STATE_END){
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         context.beginPath();
         gameUpdate();
@@ -432,11 +436,23 @@ function startGame() {
             endGame();
         }
     }
+    else {
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+    }
 }
 
 function init() {
     startGame();
-    requestAnimationFrame(init);
+
+    if(gameState == STATE_END) {
+        //return score;
+        // Kyle please do your website magic here.
+        window.location.href = "leaderboard";
+    }
+    else {
+        requestAnimationFrame(init);
+    }
+
 }
 
 //init();

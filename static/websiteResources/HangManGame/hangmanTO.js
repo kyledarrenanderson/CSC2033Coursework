@@ -31,6 +31,7 @@ let randomWords = new Map([
         ['mutation_testing', 'A white box testing type where developers insert errors purposely into the program to verify whether the existing test case can detect the error or not.']
 ]);
 
+alert("Technical Operations Questions Not Available Using Software Testing Instead")
 //making a list of only keys from words
 const word_list = [...randomWords.keys()];
 

@@ -7,7 +7,7 @@ from app import requires_roles
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
 
-# ROUTES
+# ADMIN LOG PAGE
 @admin_blueprint.route('/admin')
 @login_required
 @requires_roles('admin')
