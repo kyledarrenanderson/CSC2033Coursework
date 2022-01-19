@@ -447,7 +447,7 @@ function init() {
     if(gameState == STATE_END) {
         //return score;
         // Kyle please do your website magic here.
-        window.location.href = "./../../../templates/leaderboard.html";
+        window.location.href = "leaderboard";
     }
     else {
         requestAnimationFrame(init);
