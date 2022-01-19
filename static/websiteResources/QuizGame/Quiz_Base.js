@@ -111,6 +111,15 @@ function endGame(){
     startButton.innerText = 'Restart';
     scoreElement.innerHTML = scoreIndex;
     startButton.addEventListener('click', main);
+
+    const request = new XMLHttpRequest();
+    let scoreData = {
+        'score' : String(scoreIndex),
+        'game' : 'Quiz'
+    }
+    request.open('POST','processScore');
+    request.send(JSON.stringify(scoreData));
+    window.location.href = "leaderboard";
 }
 
 //Function used to reset and call the next question
@@ -166,7 +175,7 @@ function selectAnswer(e) {
 //Function that checks if selected answer is right and then increments the score
 function checkAnswer(answer,correct){
     if (correct) {
-        scoreIndex++;
+        scoreIndex+=1000;
     }
 }
 
