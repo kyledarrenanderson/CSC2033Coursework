@@ -2,6 +2,12 @@ import pyodbc
 import databaseinfo
 import textwrap
 
+"""
+ * @author Erick Grant Daleon
+ * @version 1
+ * @since 12-01-2022
+"""
+
 # CREATE CONNECTION STRING
 connection_string = textwrap.dedent('''
     Driver={driver};
