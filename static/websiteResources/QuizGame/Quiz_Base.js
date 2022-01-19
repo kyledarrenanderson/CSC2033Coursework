@@ -1,3 +1,12 @@
+/**
+ * Quiz game code
+ *
+ * @author Elvis Edward Robinson
+ * @version 1.2
+ * @since 06-01-2022
+ */
+
+//Main elements drawn in from the html page to be used.
 const startButton = document.getElementById('start-btn')
 const nextButton = document.getElementById('next-btn')
 const endButton = document.getElementById('end-btn')
@@ -13,10 +22,12 @@ const businessElement = document.getElementById('BusinessIntel')
 const softwareElement = document.getElementById('SoftwareTest')
 const technicalElement = document.getElementById('TechOperations')
 
+//Variables required in code
 let shuffledQuestions, currentQuestionIndex, scoreIndex
 
-//startButton.addEventListener('click', startGame)
 main()
+
+//Main function to hold initialisations and game start
 function main() {
     scoreElement.classList.add('hide')
     scoreBrdElement.classList.add('hide')
@@ -35,6 +46,7 @@ function main() {
     })
 }
 
+//Three start functions dependent on question type
 function startGameB(){
     console.log('Started B')
     endContainerElement.classList.add('hide')
@@ -87,6 +99,7 @@ function startGameT(){
     setNextQuestion()
 }
 
+//End game function to display the end screen
 function endGame(){
     console.log('Ended')
     endContainerElement.classList.remove('hide')
@@ -100,11 +113,13 @@ function endGame(){
     startButton.addEventListener('click', main)
 }
 
+//Function used to reset and call the next question
 function setNextQuestion() {
     resetState()
     showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
+//Function display the question and answer option
 function showQuestion(question) {
     questionElement.innerText = question.question
     diffElement.innerText = question.difficulty
@@ -121,27 +136,7 @@ function showQuestion(question) {
     })
 }
 
-function randomIndexArray(currentIndex) {
-    let randomArray = []
-    randomArray.push(currentIndex);
-    let index = 0
-    let boo
-    do {
-        boo = true
-        var num = Math.floor(Math.random() * 23);
-        for (x = 0; x < randomArray.length - 1; x++) {
-            if (num === randomArray[x]) {
-                boo = false
-            }
-        }
-        if (boo === true) {
-            index++
-            randomArray.push(num)
-        }
-    } while (index < 3)
-    return randomArray
-}
-
+//Function that resets the answers for the next question
 function resetState() {
     clearStatusClass(document.body)
     nextButton.classList.add('hide')
@@ -151,6 +146,7 @@ function resetState() {
     }
 }
 
+//Function used to select the answer
 function selectAnswer(e) {
     const selectedButton = e.target
     const correct = selectedButton.dataset.correct
@@ -167,12 +163,14 @@ function selectAnswer(e) {
     }
 }
 
+//Function that checks if selected answer is right and then increments the score
 function checkAnswer(answer,correct){
     if (correct) {
         scoreIndex++
     }
 }
 
+//Function that changes the class dependent on answer correctness
 function setStatusClass(element, correct) {
     clearStatusClass(element)
     if(correct) {
@@ -182,11 +180,13 @@ function setStatusClass(element, correct) {
     }
 }
 
+//Function that clears the classes between questions
 function clearStatusClass(element) {
     element.classList.remove('correct')
     element.classList.remove('wrong')
 }
 
+//Question lists
 const businessQuestions = [
     {
         question: 'A Business Intelligence question',
