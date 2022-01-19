@@ -186,27 +186,14 @@ def quizTechnicalOperations():
 @requires_roles('user')
 def accountUpdate():
     form = UpdateInfoForm()
-    if form.validate_on_submit():
-        if form.email.data:
-            sql_update("INSERT INTO Users (email)VALUES(?) WHERE (userID)" + str(current_user.userID), form.email.data)
-        if form.firstName.data:
-            sql_update("INSERT INTO Users (firstName)VALUES(?) WHERE (userID)" + str(current_user.userID),
-                       form.firstName.data)
-        if form.lastName.data:
-            sql_update("INSERT INTO Users (lastName)VALUES(?) WHERE (userID)" + str(current_user.userID),
-                       form.lastName.data)
-        if form.phone.data:
-            sql_update("INSERT INTO Users (phoneNumber)VALUES(?) WHERE (userID)" + str(current_user.userID),
-                       form.phone.data)
-        if form.password.data:
-            sql_update("INSERT INTO Users (password)VALUES(?) WHERE (userID)" + str(current_user.userID),
-                       generate_password_hash(form.password.data))
-        if form.educationLevel.data:
-            sql_update("INSERT INTO Users (educationLevel)VALUES(?) WHERE (userID)" + str(current_user.userID),
-                       form.educationLevel.data)
-        if form.studiedCompSci.data:
-            sql_update("INSERT INTO Users (takenCS)VALUES(?) WHERE (userID)" + str(current_user.userID),
-                       form.studiedCompSci.data)
+    if form.validate_on_submit and check_password_hash(current_user.password, form.password.data):
+        sql_update("UPDATE Users SET email =" + form.email.data + " WHERE userID = " + str(current_user.userID))
+        sql_update("UPDATE Users SET firstName =" + form.firstName.data + " WHERE userID = " + str(current_user.userID))
+        sql_update("UPDATE Users SET lastName =" + form.lastName.data + " WHERE userID = " + str(current_user.userID))
+        sql_update("UPDATE Users SET phoneNumber =" + form.phone.data + " WHERE userID = " + str(current_user.userID))
+        sql_update("UPDATE Users SET password =" + generate_password_hash(form.password.data) + " WHERE userID = " + str(current_user.userID))
+        sql_update("UPDATE Users SET educationLevel =" + form.educationLevel.data + " WHERE userID = " + str(current_user.userID))
+        sql_update("UPDATE Users SET takenCS =" + form.studiedCompSci.data + " WHERE userID = " + str(current_user.userID))
         return redirect(url_for('users.account'))
     return render_template("accountUpdate.html", form=form)
 
