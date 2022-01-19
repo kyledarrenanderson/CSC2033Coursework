@@ -5,28 +5,85 @@ const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const scoreElement = document.getElementById('score')
 const scoreBrdElement = document.getElementById('score-brd')
+const diffBrdElement = document.getElementById('difficulty')
+const diffElement = document.getElementById('diff')
 const answerButtonsElement = document.getElementById('answer-buttons')
 const endContainerElement = document.getElementById('end-container')
+const businessElement = document.getElementById('BusinessIntel')
+const softwareElement = document.getElementById('SoftwareTest')
+const technicalElement = document.getElementById('TechOperations')
 
-let shuffledQuestions, currentQuestionIndex
-let scoreIndex
+let shuffledQuestions, currentQuestionIndex, scoreIndex
 
-startButton.addEventListener('click', startGame)
-nextButton.addEventListener('click', () => {
-    currentQuestionIndex++
-    setNextQuestion()
-})
+//startButton.addEventListener('click', startGame)
+main()
+function main() {
+    scoreElement.classList.add('hide')
+    scoreBrdElement.classList.add('hide')
+    startButton.classList.add('hide')
+    endContainerElement.classList.add('hide')
+    endButton.classList.add('hide')
+    businessElement.classList.remove('hide')
+    softwareElement.classList.remove('hide')
+    technicalElement.classList.remove('hide')
+    businessElement.addEventListener('click', startGameB)
+    softwareElement.addEventListener('click', startGameS)
+    technicalElement.addEventListener('click', startGameT)
+    nextButton.addEventListener('click', () => {
+        currentQuestionIndex++
+        setNextQuestion()
+    })
+}
 
-function startGame() {
-    console.log('Started')
+function startGameB(){
+    console.log('Started B')
     endContainerElement.classList.add('hide')
     scoreIndex = 0
     startButton.classList.add('hide')
-    shuffledQuestions = questions.sort(() => Math.random() - .5)
+    businessElement.classList.add('hide')
+    softwareElement.classList.add('hide')
+    technicalElement.classList.add('hide')
+    shuffledQuestions = businessQuestions.sort(() => Math.random() - .5)
     currentQuestionIndex = 0
     questionContainerElement.classList.remove('hide')
     scoreElement.classList.remove('hide')
     scoreBrdElement.classList.remove('hide')
+    diffBrdElement.classList.remove('hide')
+    diffElement.classList.remove('hide')
+    setNextQuestion()
+}
+function startGameS(){
+    console.log('Started S')
+    endContainerElement.classList.add('hide')
+    scoreIndex = 0
+    startButton.classList.add('hide')
+    businessElement.classList.add('hide')
+    softwareElement.classList.add('hide')
+    technicalElement.classList.add('hide')
+    shuffledQuestions = softwareQuestions.sort(() => Math.random() - .5)
+    currentQuestionIndex = 0
+    questionContainerElement.classList.remove('hide')
+    scoreElement.classList.remove('hide')
+    scoreBrdElement.classList.remove('hide')
+    diffBrdElement.classList.remove('hide')
+    diffElement.classList.remove('hide')
+    setNextQuestion()
+}
+function startGameT(){
+    console.log('Started T')
+    endContainerElement.classList.add('hide')
+    scoreIndex = 0
+    startButton.classList.add('hide')
+    businessElement.classList.add('hide')
+    softwareElement.classList.add('hide')
+    technicalElement.classList.add('hide')
+    shuffledQuestions = technicalQuestions.sort(() => Math.random() - .5)
+    currentQuestionIndex = 0
+    questionContainerElement.classList.remove('hide')
+    scoreElement.classList.remove('hide')
+    scoreBrdElement.classList.remove('hide')
+    diffBrdElement.classList.remove('hide')
+    diffElement.classList.remove('hide')
     setNextQuestion()
 }
 
@@ -34,11 +91,13 @@ function endGame(){
     console.log('Ended')
     endContainerElement.classList.remove('hide')
     questionContainerElement.classList.add('hide')
+    diffElement.classList.add('hide')
+    diffBrdElement.classList.add('hide')
     startButton.classList.remove('hide')
     endButton.classList.add('hide')
     startButton.innerText = 'Restart'
     scoreElement.innerHTML = scoreIndex
-    startButton.addEventListener('click', startGame)
+    startButton.addEventListener('click', main)
 }
 
 function setNextQuestion() {
@@ -48,6 +107,7 @@ function setNextQuestion() {
 
 function showQuestion(question) {
     questionElement.innerText = question.question
+    diffElement.innerText = question.difficulty
     scoreElement.innerText = scoreIndex
     question.answers.forEach(answer => {
         const button = document.createElement('button')
@@ -59,6 +119,27 @@ function showQuestion(question) {
         button.addEventListener('click',selectAnswer)
         answerButtonsElement.appendChild(button)
     })
+}
+
+function randomIndexArray(currentIndex) {
+    let randomArray = []
+    randomArray.push(currentIndex);
+    let index = 0
+    let boo
+    do {
+        boo = true
+        var num = Math.floor(Math.random() * 23);
+        for (x = 0; x < randomArray.length - 1; x++) {
+            if (num === randomArray[x]) {
+                boo = false
+            }
+        }
+        if (boo === true) {
+            index++
+            randomArray.push(num)
+        }
+    } while (index < 3)
+    return randomArray
 }
 
 function resetState() {
@@ -73,7 +154,6 @@ function resetState() {
 function selectAnswer(e) {
     const selectedButton = e.target
     const correct = selectedButton.dataset.correct
-    console.log('1')
     checkAnswer(selectedButton,correct)
     setStatusClass(document.body, correct)
     Array.from(answerButtonsElement.children).forEach(button => {
@@ -88,12 +168,8 @@ function selectAnswer(e) {
 }
 
 function checkAnswer(answer,correct){
-    console.log('2')
     if (correct) {
         scoreIndex++
-        console.log('3')
-        console.log('score:')
-        console.log(scoreIndex)
     }
 }
 
@@ -111,30 +187,191 @@ function clearStatusClass(element) {
     element.classList.remove('wrong')
 }
 
-const questions = [
+const businessQuestions = [
     {
-        question: 'What is 2 + 2?',
-        answers: [
-            { text: '4', correct: true },
-            { text: '22', correct: false }
+        question: 'A Business Intelligence question',
+        difficulty: 'easy',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+    {
+        question: 'Another Business Intelligence question',
+        difficulty: 'easy',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false},
+            {text:'The correct answer',correct:true}
         ]
     },
         {
-        question: 'What is 4 * 2?',
-        answers: [
-            { text: '8', correct: true },
-            { text: '16', correct: false },
-            { text: '64', correct: false },
-            { text: '102', correct: false }
+        question: 'Another different Business Intelligence question',
+        difficulty: 'normal',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A confusing answer',correct:false}
         ]
     },
-            {
-        question: 'What is 9 + 10?',
-        answers: [
-            { text: '21', correct: true },
-            { text: '14', correct: false },
-            { text: '19', correct: false },
-            { text: '6', correct: false }
+        {
+        question: 'Here is a Business Intelligence question',
+        difficulty: 'normal',
+        answers : [
+            {text:'The correct answer',correct:true},
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+        {
+        question: 'A interesting Business Intelligence question',
+        difficulty: 'hard',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false},
+            {text:'The correct answer',correct:true},
+        ]
+    },
+        {
+        question: 'A hard Business Intelligence question',
+        difficulty: 'hard',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false}
+        ]
+    }
+]
+
+const softwareQuestions = [
+    {
+        question: 'A Software Testing question',
+        difficulty: 'easy',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+    {
+        question: 'Another Software Testing question',
+        difficulty: 'easy',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false},
+            {text:'The correct answer',correct:true}
+        ]
+    },
+        {
+        question: 'Another different Software Testing question',
+        difficulty: 'normal',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+        {
+        question: 'Here is a Software Testing question',
+        difficulty: 'normal',
+        answers : [
+            {text:'The correct answer',correct:true},
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+        {
+        question: 'A interesting Software Testing question',
+        difficulty: 'hard',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false},
+            {text:'The correct answer',correct:true},
+        ]
+    },
+        {
+        question: 'A hard Software Testing question',
+        difficulty: 'hard',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false}
+        ]
+    }
+]
+
+const technicalQuestions = [
+    {
+        question: 'A Technical Operations question',
+        difficulty: 'easy',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+    {
+        question: 'Another Technical Operations question',
+        difficulty: 'easy',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false},
+            {text:'The correct answer',correct:true}
+        ]
+    },
+        {
+        question: 'Another different Technical Operations question',
+        difficulty: 'normal',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+        {
+        question: 'Here is a Technical Operations question',
+        difficulty: 'normal',
+        answers : [
+            {text:'The correct answer',correct:true},
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false}
+        ]
+    },
+        {
+        question: 'A interesting Technical Operations question',
+        difficulty: 'hard',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false},
+            {text:'The correct answer',correct:true},
+        ]
+    },
+        {
+        question: 'A hard Technical Operations question',
+        difficulty: 'hard',
+        answers : [
+            {text:'An easy answer',correct:false},
+            {text:'The correct answer',correct:true},
+            {text:'A wrong answer',correct:false},
+            {text:'A confusing answer',correct:false}
         ]
     }
 ]

@@ -8,6 +8,7 @@
     <title>Quiz App</title>
     <link href="../static/websiteResources/QuizGame/Quiz_Style.css" rel="stylesheet">
     <script defer src="../static/websiteResources/QuizGame/Quiz_Base.js"></script>
+    <script type="text/javascript" src="../static/websiteResources/QuizGame/javascript.js"></script>
 </head>
 <body>
     <div id="score-brd" class="score hide">
@@ -18,18 +19,25 @@
         <div id="question-container" class="hide">
             <div id="question">Question</div>
             <div id="answer-buttons" class="btn-grid">
-                <button class="btn">Answer 1</button>
-                <button class="btn">Answer 2</button>
-                <button class="btn">Answer 3</button>
-                <button class="btn">Answer 4</button>
+                <button id="answer" class="btn">Answer 1</button>
+                <button id="answer" class="btn">Answer 2</button>
+                <button id="answer" class="btn">Answer 3</button>
+                <button id="answer" class="btn">Answer 4</button>
             </div>
         </div>
         <div id="end-container" class="hide">Thanks for playing</div>
         <div class="controls">
-            <button id="start-btn" class="start-btn btn">Start</button>
+            <button id="start-btn" class="start-btn btn hide">Start</button>
+            <button id="BusinessIntel" class="start-btn btn">Business Intelligence</button>
+            <button id="TechOperations" class="start-btn btn">Technical Operations</button>
+            <button id="SoftwareTest" class="start-btn btn">Software Testing</button>
             <button id="next-btn" class="next-btn btn hide">Next</button>
             <button id="end-btn" class="end-btn btn hide">End Game</button>
         </div>
+    </div>
+    <div id="difficulty" class="diff hide">
+        <div>Difficulty:</div>
+        <div id="diff">Diff</div>
     </div>
 </body>
 </html>
