@@ -188,19 +188,19 @@ def accountUpdate():
     form = UpdateInfoForm()
     if form.validate_on_submit and check_password_hash(current_user.password, form.password.data):
         if form.email.data:
-            sql_update("UPDATE Users SET email =" + form.email.data + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET email =" + form.email.data + " WHERE userID = " + str(current_user.userID), ())
         if form.firstName.data:
-            sql_update("UPDATE Users SET firstName =" + form.firstName.data + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET firstName =" + form.firstName.data + " WHERE userID = " + str(current_user.userID), ())
         if form.lastName.data:
-            sql_update("UPDATE Users SET lastName =" + form.lastName.data + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET lastName =" + form.lastName.data + " WHERE userID = " + str(current_user.userID), ())
         if form.phone.data:
-            sql_update("UPDATE Users SET phoneNumber =" + form.phone.data + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET phoneNumber =" + form.phone.data + " WHERE userID = " + str(current_user.userID), ())
         if form.password.data:
-            sql_update("UPDATE Users SET password =" + generate_password_hash(form.password.data) + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET password =" + generate_password_hash(form.password.data) + " WHERE userID = " + str(current_user.userID), ())
         if form.educationLevel.data:
-            sql_update("UPDATE Users SET educationLevel =" + form.educationLevel.data + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET educationLevel =" + form.educationLevel.data + " WHERE userID = " + str(current_user.userID), ())
         if form.studiedCompSci.data:
-            sql_update("UPDATE Users SET takenCS =" + form.studiedCompSci.data + " WHERE userID = " + str(current_user.userID))
+            sql_update("UPDATE Users SET takenCS =" + form.studiedCompSci.data + " WHERE userID = " + str(current_user.userID), ())
         return redirect(url_for('users.account'))
     return render_template("accountUpdate.html", form=form)
 
