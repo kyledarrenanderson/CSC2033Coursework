@@ -29,3 +29,5 @@ data =
     '{"Difficulty" : "Hard", "question" : "A type of testing tool which helps the programmers to|improve their code. Thus, it reduces the time spent on coding.", "answer" : "Unit Testing Tool"},' +
     '{"Difficulty" : "Hard", "question" : "This type of testing tool is used to check the software|application’s load, stability and scalability.", "answer" : "Performance Testing Tool"},' +
     '{"Difficulty" : "Hard", "question" : "A white box testing type where developers insert errors purposely into the program to|verify whether the existing test case can detect the error or not.", "answer" : "Mutation Testing"}]';
+
+questions_type = 'softwareTesting';

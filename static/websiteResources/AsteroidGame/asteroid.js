@@ -447,6 +447,14 @@ function init() {
     if(gameState == STATE_END) {
         //return score;
         // Kyle please do your website magic here.
+        const request = new XMLHttpRequest();
+        let scoreData = {
+            'score' : String(score),
+            'game' : 'Asteroids'
+        }
+
+        request.open('POST','processScore');
+        request.send(JSON.stringify(scoreData));
         window.location.href = "leaderboard";
     }
     else {

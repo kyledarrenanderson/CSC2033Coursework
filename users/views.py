@@ -1,13 +1,15 @@
 # IMPORTS
+import json
 import logging
 
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 from app import requires_roles
 from models import User
-from sql_handler import sql_update, sql_get
+from sql_handler import sql_update, sql_get, sql_addLeaderboardEntry
 from users.forms import RegisterForm, LoginForm, UpdateInfoForm
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
@@ -74,11 +76,19 @@ def learningResources():
     return render_template('learningResources.html')
 
 
-#LEADERBOARD PAGE
+@users_blueprint.route('/processScore', methods=['POST', 'GET'])
+def processScore():
+    scoreData = request.data
+    print(scoreData)
+    #sql_addLeaderboardEntry(current_user.id, scoreData["game"], hiScore, lastPlayed)
+
+
+# LEADERBOARD PAGE
 @users_blueprint.route('/leaderboard')
 @login_required
 @requires_roles('user')
 def leaderboard():
+
     # Gets the top 10 scoring users from the User tabel to display as an overall leaderboard
     totalValues = sql_get(
         "SELECT TOP 10 firstName, overallScore FROM Users WHERE role = 'user' ORDER BY overallScore DESC", ())

@@ -24,3 +24,5 @@ data =
     '{"Difficulty" : "Hard", "question" : "A graphical representation of the progress over time of users, toward some specified goal and highlighting them", "answer" : "Scoreboard"},' +
     '{"Difficulty" : "Hard", "question" : "It is a term that refers data dimensions that can change slowly and unpredictably rather than on a static or fixed schedule", "answer" : "Slowly Changing Dimensions"},' +
     '{"Difficulty" : "Hard", "question" : "It is a term that refers one or more fields in a database table that contain same value in a related table", "answer" : "Table Relations"}]';
+
+questions_type = 'businessIntel';

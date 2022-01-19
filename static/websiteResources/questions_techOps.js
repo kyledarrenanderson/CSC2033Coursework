@@ -23,3 +23,5 @@ data =
     '{"Difficulty" : "Hard", "question" : "6", "answer" : "6"},' +
     '{"Difficulty" : "Hard", "question" : "7", "answer" : "7"},' +
     '{"Difficulty" : "Hard", "question" : "8", "answer" : "8"}]';
+
+questions_type = 'techOps';
