@@ -1,30 +1,38 @@
+/**
+ * Hangman game code
+ *
+ * @author Jack Down
+ * @version 1.0
+ * @since 08-01-2022
+ */
+
 //Word and Defintion list
 let randomWords = new Map([
         ['spreadsheets', 'A tool for visualising of simple tabular data via charts and graphs'],
-        ['reporting_software', 'This tool is used to report, organize, alter and display data'],
-        ['risk_management', 'This stage of business intelligence is about the identification, evaluation of actions might be taken at different times'],
+        ['reporting-software', 'This tool is used to report, organize, alter and display data'],
+        ['risk-management', 'This stage of business intelligence is about the identification, evaluation of actions might be taken at different times'],
         ['five', 'How many key stages are in business intelligence'],
-        ['data_security', 'A process of protecting data from external attacks and data corruption'],
-        ['visual_analytics', 'In this process of BI, analysts explore data through visualization'],
-        ['data_visualisation', 'A process of interpreting large data sets into graphs'],
+        ['data-security', 'A process of protecting data from external attacks and data corruption'],
+        ['visual-analytics', 'In this process of BI, analysts explore data through visualization'],
+        ['data-visualisation', 'A process of interpreting large data sets into graphs'],
         ['dashboards', 'A management reporting tool to measure how well the organization company is performing'],
         ['analytics', 'The discovery, interpretation and communication of meaningful patterns in data'],
         ['metadata', 'A set of data that gives information about some data'],
-        ['application_designer', 'A BI role who is responsible for designing the initial reporting templates and dashboards in the front-end applications'],
-        ['database_management_system', 'A system that enables users to create, read, update and delete data in a database'],
-        ['data_modelling', 'A process of defining, analysing and structuring data within data'],
+        ['application-designer', 'A BI role who is responsible for designing the initial reporting templates and dashboards in the front-end applications'],
+        ['database-management-system', 'A system that enables users to create, read, update and delete data in a database'],
+        ['data-modelling', 'A process of defining, analysing and structuring data within data'],
         ['index', 'A data structure that stores values for a specific column in a table'],
-        ['snowflake_schema', 'An arrangement of tables in a database such that the model resembles a snowflake shape'],
-        ['front_end', 'This portion of a program usually interfaces directly with the end user'],
-        ['data_warehouse', 'A large store of data accumulated from a wide range of sources that can be processed within a company'],
-        ['database_administrator', 'A role that is responsible for directing a database and maintaining the data safe'],
-        ['star_schema', 'A style of data mart schema and most widely used approach to develop data warehouses'],
-        ['online_analytical_processing', 'A process that organizes large business databases and supports complex analysis'],
-        ['olap_cube', 'A way of storing data in a multidimensional form, generally for reporting purposes'],
-        ['full_load', 'A method of reading and updating all records in a data source during warehouse loading. It is one of the two techniques of loading data'],
+        ['snowflake-schema', 'An arrangement of tables in a database such that the model resembles a snowflake shape'],
+        ['front-end', 'This portion of a program usually interfaces directly with the end user'],
+        ['data-warehouse', 'A large store of data accumulated from a wide range of sources that can be processed within a company'],
+        ['database-administrator', 'A role that is responsible for directing a database and maintaining the data safe'],
+        ['star-schema', 'A style of data mart schema and most widely used approach to develop data warehouses'],
+        ['online-analytical_processing', 'A process that organizes large business databases and supports complex analysis'],
+        ['olap-cube', 'A way of storing data in a multidimensional form, generally for reporting purposes'],
+        ['full-load', 'A method of reading and updating all records in a data source during warehouse loading. It is one of the two techniques of loading data'],
         ['scoreboard', 'A graphical representation of the progress over time of users, toward some specified goal and highlighting them'],
-        ['slowly_changing_dimensions', 'It is a term that refers data dimensions that can change slowly and unpredictably rather than on a static or fixed schedule'],
-        ['table_relations', 'It is a term that refers one or more fields in a database table that contain same value in a related table']
+        ['slowly-changing-dimensions', 'It is a term that refers data dimensions that can change slowly and unpredictably rather than on a static or fixed schedule'],
+        ['table-relations', 'It is a term that refers one or more fields in a database table that contain same value in a related table']
 ]);
 
 //making a list of only keys from words
@@ -48,7 +56,7 @@ function randomWord() {
 }
 //Generating the Keyboard
 function generateButtons() {
-    let buttonsHTML = 'abcdefghijklmnopqrstuvwxyz_'.split('').map(letter => `
+    let buttonsHTML = 'abcdefghijklmnopqrstuvwxyz-'.split('').map(letter => `
         <button
             class="btn btn-lg btn-primary m-2"
             id='` + letter + `'
@@ -166,20 +174,33 @@ function timer(seconds) {
     countdown = setInterval(() => {
         const secondsleft = Math.round((then - Date.now()) / 1000);
         //When it reaches 0 seconds it hides the elements of the page and displays score
-        if (secondsleft < 0) {
-            clearInterval(countdown);
-            finalScore = score;
-            document.getElementById('keyboard').innerHTML = '';
-            document.getElementById('hangmanPic').innerHTML = '';
-            document.getElementById('wordSpotlight').innerHTML = '';
-            document.getElementById('paragraph').innerHTML = '';
-            document.getElementById('definition').innerHTML = '';
-            document.getElementById('definition:').innerHTML = '';
-            document.getElementById('score').innerHTML = '';
-            document.getElementById('mistakes').innerHTML = '';
-            document.getElementById('wrong-guesses').innerHTML = 'Your Score is';
-            document.getElementById('your-score').innerHTML = finalScore;
-            return;
+        function endGame() {
+            if (secondsleft < 0) {
+                clearInterval(countdown);
+                finalScore = score;
+                document.getElementById('keyboard').innerHTML = '';
+                document.getElementById('hangmanPic').innerHTML = '';
+                document.getElementById('wordSpotlight').innerHTML = '';
+                document.getElementById('paragraph').innerHTML = '';
+                document.getElementById('definition').innerHTML = '';
+                document.getElementById('definition:').innerHTML = '';
+                document.getElementById('score').innerHTML = '';
+                document.getElementById('mistakes').innerHTML = '';
+                document.getElementById('wrong-guesses').innerHTML = 'Your Score is';
+                document.getElementById('your-score').innerHTML = finalScore;
+
+                const request = new XMLHttpRequest();
+                let scoreData = {
+                    'score': String(finalScore),
+                    'game': 'Hangman'
+                }
+
+                request.open('POST', 'processScore');
+                request.send(JSON.stringify(scoreData));
+                window.location.href = "leaderboard";
+
+                return;
+            }
         }
         displayTimeLeft(secondsleft);
     }, 1000);

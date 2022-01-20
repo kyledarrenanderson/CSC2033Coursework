@@ -1,3 +1,11 @@
+/**
+ * Hangman game code
+ *
+ * @author Jack Down
+ * @version 1.0
+ * @since 08-01-2022
+ */
+
 //Word and Defintion list
 let randomWords = new Map([
         ['requirement-analysis', 'What is the first phase of Software Testing Life Cycle(STLC)?'],
@@ -170,20 +178,33 @@ function timer(seconds) {
     countdown = setInterval(() => {
         const secondsleft = Math.round((then - Date.now()) / 1000);
         //When it reaches 0 seconds it hides the elements of the page and displays score
-        if (secondsleft < 0) {
-            clearInterval(countdown);
-            finalScore = score;
-            document.getElementById('keyboard').innerHTML = '';
-            document.getElementById('hangmanPic').innerHTML = '';
-            document.getElementById('wordSpotlight').innerHTML = '';
-            document.getElementById('paragraph').innerHTML = '';
-            document.getElementById('definition').innerHTML = '';
-            document.getElementById('definition:').innerHTML = '';
-            document.getElementById('score').innerHTML = '';
-            document.getElementById('mistakes').innerHTML = '';
-            document.getElementById('wrong-guesses').innerHTML = 'Your Score is';
-            document.getElementById('your-score').innerHTML = finalScore;
-            return;
+        function endGame() {
+            if (secondsleft < 0) {
+                clearInterval(countdown);
+                finalScore = score;
+                document.getElementById('keyboard').innerHTML = '';
+                document.getElementById('hangmanPic').innerHTML = '';
+                document.getElementById('wordSpotlight').innerHTML = '';
+                document.getElementById('paragraph').innerHTML = '';
+                document.getElementById('definition').innerHTML = '';
+                document.getElementById('definition:').innerHTML = '';
+                document.getElementById('score').innerHTML = '';
+                document.getElementById('mistakes').innerHTML = '';
+                document.getElementById('wrong-guesses').innerHTML = 'Your Score is';
+                document.getElementById('your-score').innerHTML = finalScore;
+
+                const request = new XMLHttpRequest();
+                let scoreData = {
+                    'score': String(finalScore),
+                    'game': 'Hangman'
+                }
+
+                request.open('POST', 'processScore');
+                request.send(JSON.stringify(scoreData));
+                window.location.href = "leaderboard";
+
+                return;
+            }
         }
         displayTimeLeft(secondsleft);
     }, 1000);
