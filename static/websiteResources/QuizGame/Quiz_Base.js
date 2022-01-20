@@ -1,6 +1,11 @@
 /**
  * Quiz game code
  *
+ * In comparison to the other games code, mine does not work.
+ * It can't read the main question files and so I had to make my own
+ * and I'm pretty sure I know why, but a fix for it would have broken alot
+ * of code.
+ *
  * @author Elvis Edward Robinson
  * @version 1.2
  * @since 06-01-2022
