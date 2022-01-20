@@ -3,7 +3,7 @@ import json
 import logging
 from datetime import datetime
 
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -23,6 +23,10 @@ def register():
     form = RegisterForm()
     # Takes user inputs from form and adds it to database as a new row
     if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash('email address already exists')
+            return render_template('register.html', form=form)
         sql_update("INSERT INTO Users (email, firstName, lastName, educationLevel, dateOfBirth, password, takenCS, "
                    "phoneNumber, role)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                    (form.email.data, form.firstName.data, form.lastName.data, form.educationLevel.data, form.dob.data,
