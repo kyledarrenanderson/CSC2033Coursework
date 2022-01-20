@@ -445,8 +445,7 @@ function init() {
     startGame();
 
     if(gameState == STATE_END) {
-        //return score;
-        // Kyle please do your website magic here.
+        // sends score to database
         const request = new XMLHttpRequest();
         let scoreData = {
             'score' : String(score),
@@ -462,8 +461,6 @@ function init() {
     }
 
 }
-
-//init();
 
 // utility functions
 function interlope(a, b, x) {
