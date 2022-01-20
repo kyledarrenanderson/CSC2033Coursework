@@ -6,8 +6,8 @@
  * @since 08-01-2022
  */
 
-//Word and Defintion list
-let randomWords = new Map([
+//Word and Definition list
+const randomWords = new Map([
         ['requirement-analysis', 'What is the first phase of Software Testing Life Cycle(STLC)?'],
         ['manual-testing', 'Which type of software testing can be done|without programming knowledge?'],
         ['test-tool-selection', 'What is followed on first stage in automation testing?'],
@@ -129,8 +129,8 @@ function updateScore() {
     document.getElementById('score').innerHTML = score;
 }
 
-//Fetching the defintion of the word from the list above
-function getDefintion() {
+//Fetching the definition of the word from the list above
+function getDefinition() {
     definition = randomWords.get(answer);
     document.getElementById('definition').innerHTML = definition;
 }
@@ -144,6 +144,7 @@ function nextRound() {
     guessedWord();
     updateMistakes();
     generateButtons();
+    getDefinition();
 }
 
 //Reset function that fully resets the game
@@ -225,7 +226,7 @@ function startTimer() {
     generateButtons();
     randomWord();
     guessedWord();
-    getDefintion();
+    getDefinition();
 }
 
 
