@@ -180,7 +180,7 @@ function selectAnswer(e) {
 //Function that checks if selected answer is right and then increments the score
 function checkAnswer(answer,correct){
     if (correct) {
-        scoreIndex+=1000;
+        scoreIndex+=100;
     }
 }
 
