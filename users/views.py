@@ -60,6 +60,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if not user or not check_password_hash(user.password, form.password.data):
             logging.warning('SECURITY - Invalid Login Attempt [%s, %s]', form.email.data, request.remote_addr)
+            flash("Invalid Login Details")
 
             return render_template('login.html', form=form)
 

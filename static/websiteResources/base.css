@@ -284,3 +284,16 @@
     border-radius: 25px;
     text-align: center;
 }
+
+.errorMessage {
+    color: white;
+    background-color: #00afaf;
+    padding: 6px;
+    border-radius: 20px;
+}
+
+.errorMessage a {
+    color: white;
+    background-color: #00afaf;
+    padding: 4px
+}

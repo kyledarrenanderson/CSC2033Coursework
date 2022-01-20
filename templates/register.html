@@ -4,6 +4,13 @@
     <div class="forms">
         <h1>Register</h1>
         <form method="POST">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="errorMessage">
+                        {{ messages[0] }}. Go to <a href="{{ url_for('users.login') }}">login page</a>.
+                    </div>
+                {% endif %}
+            {% endwith %}
             {{ form.csrf_token }}
             {{ form.firstName(class="inputs", placeholder="First Name") }}
             {{ form.lastName(class="inputs", placeholder="Last Name") }}
