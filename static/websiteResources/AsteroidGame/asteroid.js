@@ -274,8 +274,8 @@ function asteroidsUpdate() {
                 gameState = STATE_GAMELOSSCOLLIDE;
             }
             else {
-                asteroids[i].x = asteroids[i].x - (500 / (120 * 60)) * Math.cos(asteroids[i].angle);
-                asteroids[i].y = asteroids[i].y - (500 / (120 * 60)) * Math.sin(asteroids[i].angle);
+                asteroids[i].x = asteroids[i].x - (500 / (countdown)) * Math.cos(asteroids[i].angle);
+                asteroids[i].y = asteroids[i].y - (500 / (countdown)) * Math.sin(asteroids[i].angle);
             }
         }
     }

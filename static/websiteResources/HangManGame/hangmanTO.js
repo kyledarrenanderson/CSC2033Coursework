@@ -6,7 +6,7 @@
  * @since 08-01-2022
  */
 
-//Word and Defintion list
+//Word and Definition list
 let randomWords = new Map([
         ['requirement-analysis', 'What is the first phase of Software Testing Life Cycle(STLC)?'],
         ['manual-testing', 'Which type of software testing can be done|without programming knowledge?'],
@@ -130,8 +130,8 @@ function updateScore() {
     document.getElementById('score').innerHTML = score;
 }
 
-//Fetching the defintion of the word from the list above
-function getDefintion() {
+//Fetching the definition of the word from the list above
+function getDefinition() {
     definition = randomWords.get(answer);
     document.getElementById('definition').innerHTML = definition;
 }
@@ -141,6 +141,7 @@ function nextRound() {
     guessed = [];
     document.getElementById('hangmanPic').src = '../static/websiteResources/HangManGame/hangmanimages/0.jpg';
 
+    getDefinition();
     randomWord();
     guessedWord();
     updateMistakes();
@@ -226,7 +227,7 @@ function startTimer() {
     generateButtons();
     randomWord();
     guessedWord();
-    getDefintion();
+    getDefinition();
 }
 
 

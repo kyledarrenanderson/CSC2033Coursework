@@ -6,7 +6,7 @@
  * @since 08-01-2022
  */
 
-//Word and Defintion list
+//Word and Definition list
 let randomWords = new Map([
         ['spreadsheets', 'A tool for visualising of simple tabular data via charts and graphs'],
         ['reporting-software', 'This tool is used to report, organize, alter and display data'],
@@ -125,8 +125,8 @@ function updateScore() {
     document.getElementById('score').innerHTML = score;
 }
 
-//Fetching the defintion of the word from the list above
-function getDefintion() {
+//Fetching the definition of the word from the list above
+function getDefinition() {
     definition = randomWords.get(answer);
     document.getElementById('definition').innerHTML = definition;
 }
@@ -136,6 +136,7 @@ function nextRound() {
     guessed = [];
     document.getElementById('hangmanPic').src = '../static/websiteResources/HangManGame/hangmanimages/0.jpg';
 
+    getDefinition();
     randomWord();
     guessedWord();
     updateMistakes();
@@ -221,7 +222,7 @@ function startTimer() {
     generateButtons();
     randomWord();
     guessedWord();
-    getDefintion();
+    getDefinition();
 }
 
 
