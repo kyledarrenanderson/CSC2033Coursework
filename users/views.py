@@ -1,6 +1,7 @@
 # IMPORTS
 import json
 import logging
+import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, logout_user, login_required, current_user
@@ -80,6 +81,9 @@ def learningResources():
 def processScore():
     scoreData = request.data
     print(scoreData)
+    lastPlayed = datetime.now()
+    hiScore = sql_get("SELECT hiScore FROM" + scoreData["game"] + "WHERE userID =" + str(current_user.id), ())
+    print(current_user.id + scoreData["game"] + hiScore + lastPlayed)
     #sql_addLeaderboardEntry(current_user.id, scoreData["game"], hiScore, lastPlayed)
 
 
