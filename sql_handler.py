@@ -54,19 +54,26 @@ def sql_addLeaderboardEntry(userID, game, hiScore, lastPlayed):
                        (userID, hiScore, lastPlayed))
         except:
             print("USER ID DOES NOT EXIST!")
+        sql_calculateOverallScore(userID)
     else:
         currentHiScore = existCheck[0][1]
         if hiScore > currentHiScore:
             sql_update("UPDATE " + game + " SET hiScore = " + str(hiScore) + " WHERE userID = " + str(userID),())
+        sql_calculateOverallScore(userID)
 
 
 def sql_calculateOverallScore(userID):
     gameList = ["Asteroids", "ChoosePath", "HangMan", "Quiz"]
     overallScore = 0
     for game in gameList:
-        scoreToAdd = sql_get("SELECT * FROM " + game + " WHERE userID = " + str(userID), ())[0][1]
-        if scoreToAdd is not None:
-            overallScore += scoreToAdd
+        print(userID)
+        print(game)
+        try:
+            scoreToAdd = sql_get("SELECT * FROM " + game + " WHERE userID = " + str(userID), ())[0][1]
+            if scoreToAdd is not None:
+                overallScore += scoreToAdd
+        except IndexError:
+            print("Entry doesn't exist yet")
 
     sql_update("UPDATE Users SET overallScore = " + str(overallScore) + " WHERE userID = " + str(userID) +
                " AND (overallScore < " + str(overallScore) + " OR overallScore IS NULL)", ())
