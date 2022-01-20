@@ -12,6 +12,7 @@ from app import requires_roles
 from models import User
 from sql_handler import sql_update, sql_get, sql_addLeaderboardEntry
 from users.forms import RegisterForm, LoginForm, UpdateInfoForm
+import json
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
@@ -79,12 +80,18 @@ def learningResources():
 
 @users_blueprint.route('/processScore', methods=['POST', 'GET'])
 def processScore():
-    scoreData = request.data
-    print(scoreData)
-    lastPlayed = datetime.now()
-    hiScore = sql_get("SELECT hiScore FROM" + scoreData["game"] + "WHERE userID =" + str(current_user.id), ())
-    print(current_user.id + scoreData["game"] + hiScore + lastPlayed)
-    #sql_addLeaderboardEntry(current_user.id, scoreData["game"], hiScore, lastPlayed)
+    scoreData = json.loads(request.data)
+    score = int(scoreData["score"])
+    print(scoreData["game"])
+    print(scoreData["score"])
+    lastPlayed = datetime.now().date()
+    print(current_user.userID)
+
+    print(lastPlayed)
+    # hiScore = sql_get("SELECT hiScore FROM " + scoreData["game"] + " WHERE userID = " + str(current_user.userID), ())
+    # print(hiScore)
+
+    sql_addLeaderboardEntry(current_user.userID, scoreData["game"], score, lastPlayed)
 
 
 # LEADERBOARD PAGE
