@@ -79,14 +79,14 @@ function handleGuess(chosenLetter) {
     document.getElementById(chosenLetter).setAttribute('disabled', true);
     //Seeing if guessed letter matches one in the random word
     if (answer.indexOf(chosenLetter) >= 0) {
-        score+= 1;
+        score+= 10;
         guessedWord();
         checkIfGameWon();
         updateScore()
     //Seeing if it doesn't match the random word
     } else if (answer.indexOf(chosenLetter) === -1) {
         mistakes++;
-        score-= 1;
+        score-= 10;
         updateMistakes();
         updateScore()
         checkIfGameLost();
@@ -101,7 +101,7 @@ function updateHangmanPicture() {
 function checkIfGameWon() {
     if (wordStatus === answer) {
         document.getElementById('keyboard').innerHTML = 'You Won!!!';
-        score+= 20;
+        score+= 100;
         updateScore();
         nextRound()
     }
@@ -110,7 +110,7 @@ function checkIfGameWon() {
 function checkIfGameLost() {
     if (mistakes === maxWrong) {
         document.getElementById('wordSpotlight').innerHTML = 'The answer was: ' + answer;
-        score -= 10;
+        score -= 50;
         updateScore();
         nextRound();
     }
