@@ -1,0 +1,31 @@
+To Launch the application first Create a new configuration as a flask server
+Then set the interpreter to be python 3.8
+Now running app.py will launch the application.
+a file called databaseinfo.py needs to be created.
+Inside the file {
+driver = '{ODBC Driver 17 for SQL Server}'
+server_name = 'csc2033-team42-fdmgroup.database.windows.net'
+database_name = 'csc2033_team42FDMGroup'
+server = 'csc2033-team42-fdmgroup.database.windows.net,1433'
+username = 'csc2033_team42'
+password = 'password for team 42 database'
+}
+needs to be added in order to connect.
+You will also need to email c0021401@ncl.ac.uk with the IP of the device you are trying to connect on in order to be added to the whitelist.
+
+Each game can be launched individually by running{
+asteroidSoftwareTesting.html
+asteroidsBusinessIntelligence.html
+asteroidsTechnicalOperations.html
+hangmanBusinessIntelligence.html
+hangmanSoftwareTesting.html
+hangmanTechnicalOperations.html
+quizBusinessIntelligence.html
+quizSoftwareTesting.html
+quizTechnicalOperations.html
+}
+Each file has questions about the topic in its name.
+
+For new questions to be added, go to static/websiteResources and add the questions to the questions_"catagory".js for the question type you want to add to.
+Each question needs a difficulty, question and answer in this format
+{"Difficulty" : "Easy", "question" : "An easy question", "answer" : "An easy answer"}
